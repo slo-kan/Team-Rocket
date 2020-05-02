@@ -1,8 +1,10 @@
-package com.teamrocket.app;
+package com.teamrocket.app.ui.main;
+
+import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import com.teamrocket.app.R;
 
 public class MainActivity extends AppCompatActivity {
 
