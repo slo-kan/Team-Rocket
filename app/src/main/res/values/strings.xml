@@ -6,4 +6,6 @@
     <string name="main_nav_categories">Categories</string>
     <string name="main_nav_search">Search</string>
 
+    <string name="home_add_sighting">Add Sighting</string>
+
 </resources>
