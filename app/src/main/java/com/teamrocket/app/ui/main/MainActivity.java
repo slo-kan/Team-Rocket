@@ -47,13 +47,28 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        currentFragmentTag = tag;
-        Fragment newFragment = currentFragmentTag.equals(HomeFragment.TAG) ? homeFragment
-                : currentFragmentTag.equals(MapFragment.TAG) ? mapFragment
-                : searchFragment;
+        Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
+        if (oldFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .hide(oldFragment)
+                    .commit();
+        }
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.mainContent, newFragment, currentFragmentTag)
-                .commit();
+        currentFragmentTag = tag;
+        Fragment newFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
+
+        if (newFragment == null) {
+            newFragment = currentFragmentTag.equals(HomeFragment.TAG) ? homeFragment
+                    : currentFragmentTag.equals(MapFragment.TAG) ? mapFragment
+                    : searchFragment;
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.mainContent, newFragment, currentFragmentTag)
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .show(newFragment)
+                    .commit();
+        }
     }
 }
