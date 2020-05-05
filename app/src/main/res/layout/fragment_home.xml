@@ -23,6 +23,9 @@
         android:id="@+id/recyclerHome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="2dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
