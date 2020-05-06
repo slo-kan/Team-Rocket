@@ -1,10 +1,24 @@
-    We formed a team and decided on our team name and logo.
+# Team Rocket Weekly Report - Week 3
 
-    We assumed our roles and responsibilities and fixed on a time slot convenient for us to further discuss and assig ourselves tasks every week. The assumed roles mainly imply the area of ones responsibility. 
-    Vasudev will  decide on design patterns and implement the required features.
-    Lokesh is supposed to  manage the development life-cycle, assigning times and bounds for features and tasks.
-    Rahul helps  with programming tasks and laying out testing strategies once the app reaches a stage where it must be tested for any bugs or issues.
-    Sreepradh has assumed the responsibility of seeing all the documentation completed in addition to helping with some programming tasks.
-    We have started working on user interface.
-    
-    
+Hello. This is the weekly report for Team Rocket's Bird Tracking app. The following are the tasks that we have worked on this week and ones that we have planned to work on for the coming week.
+
+
+## Progress this week
+
+*  We formed a team and decided on our team name and logo.
+*  We assigned individual and collective roles and responsibilities for our team members and fixed on times convenient for us to further discuss those ideas and tasks every week. The assumed roles mainly imply the area of one's responsibility.
+    *  Vasudev will decide on design patterns and implement the required features.
+    *  Lokesh is supposed to manage the development life-cycle, assigning times and bounds for features and tasks.
+    *  Rahul is tasked with helping with programming tasks and laying out testing strategies once the app reaches that stage.
+    *  Sreepradh has assumed responsibility of seeing to it that all the documentation is completed in addition to helping out with programming tasks.
+*  In addition to this, we have started working on the user interface, deciding on how the app should be laid out and what screens should serve what purpose.
+
+
+## Plans for the next week
+
+*  
+
+
+## Meeting agenda
+
+*  
