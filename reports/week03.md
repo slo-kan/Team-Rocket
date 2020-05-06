@@ -1,6 +1,6 @@
 # Team Rocket Weekly Report - Week 3
 
-Hello. This is the weekly report for Team Rocket's Bird Tracking app. The following are the tasks that we have worked on this week and ones that we have planned to work on for the coming week.
+This is the weekly report for Team Rocket's Bird Tracking app. The following are the tasks that we have worked on this week and ones that we have planned to work on for the coming week.
 
 
 ## Progress this week
@@ -16,9 +16,12 @@ Hello. This is the weekly report for Team Rocket's Bird Tracking app. The follow
 
 ## Plans for the next week
 
-*  
+*  Research on classification of birds and what categories to include by default. 
+*  Decide on how to structure data such as the categories of the birds, their sighting times and locations.
+*  Start working on writing an SQLite database to store bird sightings on the device.
 
 
 ## Meeting agenda
 
-*  
+*  Talk about the initial design of the app and whether any changes are required.
+*  Discuss about bird categories that need to be included by default, and categories that are user addable.
