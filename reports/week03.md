@@ -5,12 +5,12 @@ This is the weekly report for Team Rocket's Bird Tracking app. The following are
 
 ## Progress this week
 
-*  We formed a team and decided on our team name and logo.
+*  we have designed a logo for app. 
 *  We assigned individual and collective roles and responsibilities for our team members and fixed on times convenient for us to further discuss those ideas and tasks every week. The assumed roles mainly imply the area of one's responsibility.
     *  Vasudev will decide on design patterns and implement the required features.
-    *  Lokesh is supposed to manage the development life-cycle, assigning times and bounds for features and tasks.
+    *  Lokesh is supposed to manage the development life-cycle, assigning times and bounds for features and tasks and also responsible with designing uml class diagrams.
     *  Rahul is tasked with helping with programming tasks and laying out testing strategies once the app reaches that stage.
-    *  Sreepradh has assumed responsibility of seeing to it that all the documentation is completed in addition to helping out with programming tasks.
+    *  Sreepradh has assumed responsibility of seeing to it that all the documentation is completed in addition to helping out with programming tasks and uml diagrams.
 *  In addition to this, we have started working on the user interface, deciding on how the app should be laid out and what screens should serve what purpose.
 
 
