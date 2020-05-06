@@ -19,6 +19,7 @@ This is the weekly report for Team Rocket's Bird Tracking app. The following are
 *  Research on classification of birds and what categories to include by default. 
 *  Decide on how to structure data such as the categories of the birds, their sighting times and locations.
 *  Start working on writing an SQLite database to store bird sightings on the device.
+*  Also to get familiar with uml class diagrams.
 
 
 ## Meeting agenda
