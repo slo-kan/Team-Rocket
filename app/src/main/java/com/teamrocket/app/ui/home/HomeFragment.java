@@ -1,6 +1,9 @@
 package com.teamrocket.app.ui.home;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,11 +24,18 @@ import com.teamrocket.app.data.db.BirdSightingDao;
 import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
+
+import static android.app.Activity.RESULT_OK;
+import static android.os.Environment.DIRECTORY_PICTURES;
 
 public class HomeFragment extends Fragment {
 
     public static final String TAG = "homeFragment";
+
+    private static final int RC_PHOTO = 122;
 
     private BirdSightingDao dao;
     private HomeAdapter adapter;
@@ -44,7 +55,7 @@ public class HomeFragment extends Fragment {
         adapter = new HomeAdapter();
 
         ExtendedFloatingActionButton btnAddSighting = view.findViewById(R.id.btnAddSighting);
-        btnAddSighting.setOnClickListener(v -> addBirdSighting());
+        btnAddSighting.setOnClickListener(v -> takePhoto());
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerHome);
         recyclerView.setHasFixedSize(true);
@@ -75,8 +86,51 @@ public class HomeFragment extends Fragment {
         Toast.makeText(getContext(), "Saving a bird sighting took " + (after - before) + " ms", Toast.LENGTH_SHORT).show();
     }
 
+    private void takePhoto() {
+        Intent photoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (photoIntent.resolveActivity(getActivity().getPackageManager()) == null) {
+            return;
+        }
+
+        File photoFile = getPhotoFile();
+        if (photoFile == null) {
+            return;
+        }
+
+        Uri photoUri = FileProvider.getUriForFile(getContext(), "com.teamrocket.app.fileprovider", photoFile);
+        photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+        startActivityForResult(photoIntent, RC_PHOTO);
+
+    }
+
+    private File getPhotoFile() {
+        String fileName = "IMG_" + System.currentTimeMillis();
+        String extension = ".jpg";
+
+        File tempFile = null;
+        File storageDir = getActivity().getExternalFilesDir(DIRECTORY_PICTURES);
+        try {
+            tempFile = File.createTempFile(fileName, extension, storageDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return tempFile;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode != RC_PHOTO || resultCode != RESULT_OK) {
+            return;
+        }
+
+        Toast.makeText(getContext(), "Photo taken successesfully", Toast.LENGTH_SHORT).show();
+    }
+
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
     }
+
 }
