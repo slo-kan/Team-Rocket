@@ -42,6 +42,11 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void addSighting(BirdSighting sighting) {
+        this.sightings.add(sighting);
+        notifyItemInserted(this.sightings.size());
+    }
+
     static class BirdSightingViewHolder extends ViewHolder {
         private TextView textTitle;
 

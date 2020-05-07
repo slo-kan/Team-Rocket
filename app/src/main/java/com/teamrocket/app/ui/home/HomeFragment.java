@@ -40,22 +40,27 @@ public class HomeFragment extends Fragment {
     private BirdSightingDao dao;
     private HomeAdapter adapter;
 
+    private BirdSightingDao.Listener listener;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        listener = sighting -> adapter.addSighting(sighting);
+
+        dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
+        dao.addListener(listener);
+
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
-
         ((AppCompatActivity) getActivity()).setSupportActionBar(view.findViewById(R.id.toolbarHome));
 
         adapter = new HomeAdapter();
 
         ExtendedFloatingActionButton btnAddSighting = view.findViewById(R.id.btnAddSighting);
-        btnAddSighting.setOnClickListener(v -> takePhoto());
+        btnAddSighting.setOnClickListener(v -> addBirdSighting());
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerHome);
         recyclerView.setHasFixedSize(true);
@@ -63,6 +68,12 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         adapter.update(dao.getAll());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        dao.removeListener(listener);
     }
 
     private void addBirdSighting() {
@@ -83,7 +94,7 @@ public class HomeFragment extends Fragment {
         dao.insert(sighting);
         long after = System.currentTimeMillis();
 
-        Toast.makeText(getContext(), "Saving a bird sighting took " + (after - before) + " ms", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "Saving a bird sighting took " + (after - before) + " ms", Toast.LENGTH_SHORT).show();
     }
 
     private void takePhoto() {
