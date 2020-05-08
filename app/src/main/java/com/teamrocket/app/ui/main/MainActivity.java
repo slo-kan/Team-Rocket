@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.teamrocket.app.R;
@@ -17,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private SearchFragment searchFragment;
 
-    private String currentFragmentTag;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,43 +33,30 @@ public class MainActivity extends AppCompatActivity {
         bottomNavBar.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
-            if (itemId == R.id.main_nav_home) showFragment(HomeFragment.TAG);
-            else if (itemId == R.id.main_nav_map) showFragment(MapFragment.TAG);
-            else showFragment(SearchFragment.TAG);
+            if (itemId == R.id.main_nav_home) showFragment(homeFragment);
+            else if (itemId == R.id.main_nav_map) showFragment(mapFragment);
+            else showFragment(searchFragment);
 
             return true;
         });
 
-        showFragment(HomeFragment.TAG);
+        showFragment(homeFragment);
     }
 
-    private void showFragment(String tag) {
-        if (tag.equals(currentFragmentTag)) {
-            return;
-        }
+    private void showFragment(Fragment fragment) {
+        if (currentFragment == fragment) return;
 
-        Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
-        if (oldFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .hide(oldFragment)
-                    .commit();
-        }
+        boolean containsFragment = getSupportFragmentManager().getFragments().contains(fragment);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-        currentFragmentTag = tag;
-        Fragment newFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
+        if (currentFragment == null)
+            ft.add(R.id.mainContent, fragment, fragment.getClass().getName());
+        else if (!containsFragment)
+            ft.hide(currentFragment).add(R.id.mainContent, fragment, fragment.getClass().getName());
+        else
+            ft.hide(currentFragment).show(fragment);
 
-        if (newFragment == null) {
-            newFragment = currentFragmentTag.equals(HomeFragment.TAG) ? homeFragment
-                    : currentFragmentTag.equals(MapFragment.TAG) ? mapFragment
-                    : searchFragment;
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mainContent, newFragment, currentFragmentTag)
-                    .commit();
-        } else {
-            getSupportFragmentManager().beginTransaction()
-                    .show(newFragment)
-                    .commit();
-        }
+        ft.commit();
+        currentFragment = fragment;
     }
 }
