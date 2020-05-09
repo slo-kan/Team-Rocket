@@ -70,6 +70,13 @@ public class HomeFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 && btnAddSighting.isExtended()) btnAddSighting.shrink();
+                else if (dy < 0 && !btnAddSighting.isExtended()) btnAddSighting.extend();
+            }
+        });
 
         adapter.update(dao.getAll());
     }
