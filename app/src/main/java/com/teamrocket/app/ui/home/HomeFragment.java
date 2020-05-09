@@ -23,6 +23,7 @@ import com.teamrocket.app.R;
 import com.teamrocket.app.data.db.BirdSightingDao;
 import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
+import com.teamrocket.app.ui.add.AddSightingActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +61,10 @@ public class HomeFragment extends Fragment {
         adapter = new HomeAdapter();
 
         ExtendedFloatingActionButton btnAddSighting = view.findViewById(R.id.btnAddSighting);
-        btnAddSighting.setOnClickListener(v -> addBirdSighting());
+        btnAddSighting.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), AddSightingActivity.class));
+
+        });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerHome);
         recyclerView.setHasFixedSize(true);

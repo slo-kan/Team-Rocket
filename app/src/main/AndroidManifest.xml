@@ -23,6 +23,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.add.AddSightingActivity" />
+
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBSTKH8xOHPDJ-47vAPTfH3MRmU6OtpEM8" />
