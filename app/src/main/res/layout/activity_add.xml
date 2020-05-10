@@ -179,6 +179,17 @@
             android:singleLine="true" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRandomise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="@color/gray_2"
+            android:textColor="@color/gray_9"
+            android:layout_marginTop="16dp"
+            android:text="Randomise location"
+            android:textAllCaps="false" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveAddSighting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

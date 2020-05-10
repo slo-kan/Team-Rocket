@@ -25,6 +25,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
@@ -99,6 +100,19 @@ public class AddSightingActivity extends AppCompatActivity {
             btnMoreInfo.setImageAlpha(count > 3 ? 0xFF : 0x3F);
             btnMoreInfo.setEnabled(count > 3);
         }));
+
+        findViewById(R.id.btnRandomise).setOnClickListener(v -> {
+            String[] locationParts = editLocation.getText().toString().split(", ");
+            if (locationParts.length != 2) return;
+
+            double lat = Double.parseDouble(locationParts[0]);
+            double lon = Double.parseDouble(locationParts[1]);
+
+            LatLng random = Utils.getRandomLocation(new LatLng(lat, lon), 1000);
+            String locationMask = "%.05f, %.05f";
+            editLocation.setText(String.format(Locale.getDefault(), locationMask,
+                    random.latitude, random.longitude));
+        });
     }
 
     @Override
