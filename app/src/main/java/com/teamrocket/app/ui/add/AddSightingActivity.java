@@ -16,19 +16,29 @@ import java.io.File;
 import java.io.IOException;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class AddSightingActivity extends AppCompatActivity {
 
     private static final int RC_PHOTO = 122;
 
-    private void takePhoto() {
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add);
+        findViewById(R.id.btnAddImageAddSighting).setOnClickListener(v -> launchImageCaptureIntent());
+    }
+
+    private void launchImageCaptureIntent() {
         Intent photoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (photoIntent.resolveActivity(this.getPackageManager()) == null) {
+            Toast.makeText(this, R.string.add_sighting_no_camera, LENGTH_SHORT).show();
             return;
         }
 
         File photoFile = getPhotoFile();
         if (photoFile == null) {
+            Toast.makeText(this, R.string.add_sighting_image_file_error, LENGTH_SHORT).show();
             return;
         }
 
@@ -40,12 +50,12 @@ public class AddSightingActivity extends AppCompatActivity {
 
     private File getPhotoFile() {
         String fileName = "IMG_" + System.currentTimeMillis();
-        String extension = ".jpg";
 
         File tempFile = null;
-        File storageDir = this.getExternalFilesDir(DIRECTORY_PICTURES);
+        File storageDir = getExternalFilesDir(DIRECTORY_PICTURES);
+
         try {
-            tempFile = File.createTempFile(fileName, extension, storageDir);
+            tempFile = File.createTempFile(fileName, ".jpg", storageDir);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,15 +69,5 @@ public class AddSightingActivity extends AppCompatActivity {
         if (requestCode != RC_PHOTO || resultCode != RESULT_OK) {
             return;
         }
-
-        Toast.makeText(this, "Photo taken successesfully", Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add);
-        findViewById(R.id.btnAddImageAddSighting).setOnClickListener(v -> takePhoto());
     }
 }
