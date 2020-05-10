@@ -1,16 +1,27 @@
 package com.teamrocket.app.ui.add;
 
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.textfield.TextInputEditText;
 import com.teamrocket.app.R;
+import com.teamrocket.app.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,12 +32,82 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class AddSightingActivity extends AppCompatActivity {
 
     private static final int RC_PHOTO = 122;
+    private static final int RC_LOCATION = 333;
+
+    private FusedLocationProviderClient locationProvider;
+    private LocationCallback locationCallback;
+
+    private TextInputEditText editLocation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
-        findViewById(R.id.btnAddImageAddSighting).setOnClickListener(v -> launchImageCaptureIntent());
+
+        locationProvider = LocationServices.getFusedLocationProviderClient(this);
+
+        editLocation = findViewById(R.id.editLocationAddSighting);
+
+        if (!Utils.isLocationPermissionGranted(this)) {
+            Utils.requestLocationPermission(this, RC_LOCATION);
+        }
+
+        ImageButton btnAddImage = findViewById(R.id.btnAddImageAddSighting);
+        btnAddImage.setOnClickListener(v -> launchImageCaptureIntent());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Utils.isLocationPermissionGranted(this)) {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != RC_PHOTO || resultCode != RESULT_OK) {
+            return;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == RC_LOCATION && Utils.isLocationPermissionGranted(grantResults)) {
+            startLocationUpdates();
+        }
+    }
+
+    private void startLocationUpdates() {
+        LocationRequest request = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setFastestInterval(120 * 1000);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult != null) {
+                    Location last = locationResult.getLastLocation();
+                    editLocation.setText(last.getLatitude() + ", " + last.getLongitude());
+                }
+            }
+        };
+
+        locationProvider.requestLocationUpdates(request, locationCallback, Looper.getMainLooper());
+    }
+
+    private void stopLocationUpdates() {
+        if (locationCallback != null) {
+            locationProvider.removeLocationUpdates(locationCallback);
+        }
     }
 
     private void launchImageCaptureIntent() {
@@ -63,11 +144,4 @@ public class AddSightingActivity extends AppCompatActivity {
         return tempFile;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != RC_PHOTO || resultCode != RESULT_OK) {
-            return;
-        }
-    }
 }
