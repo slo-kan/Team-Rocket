@@ -118,6 +118,9 @@ public class AddSightingActivity extends AppCompatActivity {
             this.imagePath = null;
             return;
         }
+
+        Picasso.get().load(new File(imagePath)).fit().centerCrop()
+                .into((ImageView) findViewById(R.id.imageAddSighting));
     }
 
     @Override
