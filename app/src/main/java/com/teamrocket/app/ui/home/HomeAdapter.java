@@ -3,15 +3,18 @@ package com.teamrocket.app.ui.home;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import com.squareup.picasso.Picasso;
 import com.teamrocket.app.R;
 import com.teamrocket.app.model.BirdSighting;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,14 +52,19 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
 
     static class BirdSightingViewHolder extends ViewHolder {
         private TextView textTitle;
+        private ImageView imageBird;
 
         BirdSightingViewHolder(@NonNull View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitleItemSighting);
+            imageBird = itemView.findViewById(R.id.imageItemSighting);
         }
 
         void bind(BirdSighting birdSighting) {
             textTitle.setText(birdSighting.getBird().getName());
+
+            Picasso.get().load(new File(birdSighting.getBird().getImagePath()))
+                    .fit().centerCrop().into(imageBird);
         }
     }
 }
