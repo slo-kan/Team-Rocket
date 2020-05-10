@@ -1,5 +1,6 @@
 package com.teamrocket.app.ui.map;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.teamrocket.app.R;
 import com.teamrocket.app.util.Utils;
 
@@ -25,7 +30,10 @@ import java.util.List;
 public class MapFragment extends Fragment {
 
     public static final String TAG = "mapFragment";
+    private static final int RC_LOCATION = 432;
 
+    private LatLng lastLocation;
+    private FusedLocationProviderClient locationProvider;
     private GoogleMap map;
     private List<MarkerOptions> markers = new ArrayList<>();
 
@@ -37,41 +45,81 @@ public class MapFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        LatLng location = new LatLng(52.098361, 11.620763);
+        locationProvider = LocationServices.getFusedLocationProviderClient(requireActivity());
+        getLocationAndZoom();
+
+        if (!Utils.isLocationPermissionGranted(getContext())) {
+            Utils.requestLocationPermission(this, RC_LOCATION);
+        } else if (!Utils.isGpsEnabled(requireContext())) {
+            Utils.showInfoDialog(requireContext(), R.string.map_gps_dialog_title, R.string.map_gps_dialog_message);
+        }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(map -> {
             this.map = map;
-            this.map.setOnMarkerClickListener(marker -> {
-                Toast.makeText(getContext(), "Marking a random location", Toast.LENGTH_SHORT).show();
-
-                LatLng loc = Utils.getRandomLocation(marker.getPosition(), 1000);
-                MarkerOptions options = new MarkerOptions().position(loc).title("Marker");
-                markers.add(options);
-
-                this.map.addMarker(options);
+            if (Utils.isLocationPermissionGranted(getContext())) {
+                this.map.setMyLocationEnabled(true);
+                this.map.getUiSettings().setMyLocationButtonEnabled(false);
                 updateMapZoom();
+            }
 
+            this.map.setOnMarkerClickListener(marker -> {
+                onMarkerClicked(marker);
                 return true;
             });
 
-            MarkerOptions currentLocation = new MarkerOptions().position(location).title("Magdeburg");
-            markers.add(currentLocation);
-
-            this.map.addMarker(currentLocation);
             updateMapZoom();
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (map == null) return;
+
+        if (requestCode == RC_LOCATION && Utils.isLocationPermissionGranted(grantResults)) {
+            getLocationAndZoom();
+        }
+    }
+
     private void updateMapZoom() {
         if (this.map == null) return;
+        if (lastLocation == null && markers.isEmpty()) return;
 
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        if (lastLocation != null) {
+            boundsBuilder.include(lastLocation);
+        }
+
         for (MarkerOptions m : markers) {
             boundsBuilder.include(m.getPosition());
         }
         LatLngBounds bounds = boundsBuilder.build();
 
-        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 80));
+        int padding = Utils.toDp(32, requireContext());
+        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+    }
+
+    private void getLastLocation(OnSuccessListener<Location> onSuccess) {
+        this.locationProvider.getLastLocation().addOnSuccessListener(onSuccess);
+    }
+
+    private void getLocationAndZoom() {
+        getLastLocation(loc -> {
+            if (loc == null) return;
+            this.lastLocation = new LatLng(loc.getLatitude(), loc.getLongitude());
+            map.setMyLocationEnabled(true);
+            updateMapZoom();
+        });
+    }
+
+    private void onMarkerClicked(Marker marker) {
+        Toast.makeText(getContext(), "Marking a random location", Toast.LENGTH_SHORT).show();
+
+        LatLng loc = Utils.getRandomLocation(marker.getPosition(), 1000);
+        MarkerOptions options = new MarkerOptions().position(loc).title("Marker");
+        markers.add(options);
+
+        this.map.addMarker(options);
+        updateMapZoom();
     }
 }

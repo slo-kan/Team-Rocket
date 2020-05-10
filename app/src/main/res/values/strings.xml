@@ -9,4 +9,7 @@
     <string name="home_add_sighting">Add Sighting</string>
     <string name="title_add_sighting">Add Sighting</string>
 
+    <string name="map_gps_dialog_title">GPS is turned off</string>
+    <string name="map_gps_dialog_message">You can still see your bird sighting history but your current location will not be displayed.</string>
+
 </resources>
