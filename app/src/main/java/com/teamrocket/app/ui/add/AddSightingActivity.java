@@ -79,6 +79,7 @@ public class AddSightingActivity extends AppCompatActivity {
         editFamily = findViewById(R.id.editFamilyAddSighting);
         editLocation = findViewById(R.id.editLocationAddSighting);
         editDateTime = findViewById(R.id.editDateTimeAddSighting);
+        btnMoreInfo = findViewById(R.id.btnMoreInfoAddSighting);
 
         if (!Utils.isLocationPermissionGranted(this)) {
             Utils.requestLocationPermission(this, RC_LOCATION);
@@ -91,6 +92,13 @@ public class AddSightingActivity extends AppCompatActivity {
         btnSave.setOnClickListener(v -> addBird());
 
         editDateTime.setText(Utils.formatDate(System.currentTimeMillis()));
+
+        btnMoreInfo.setImageAlpha(0x3F);
+        btnMoreInfo.setEnabled(false);
+        editName.addTextChangedListener(new TextChangedListener(count -> {
+            btnMoreInfo.setImageAlpha(count > 3 ? 0xFF : 0x3F);
+            btnMoreInfo.setEnabled(count > 3);
+        }));
     }
 
     @Override
