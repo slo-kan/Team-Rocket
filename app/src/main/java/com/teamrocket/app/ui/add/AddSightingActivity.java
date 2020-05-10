@@ -38,6 +38,7 @@ public class AddSightingActivity extends AppCompatActivity {
     private LocationCallback locationCallback;
 
     private TextInputEditText editLocation;
+    private TextInputEditText editDateTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class AddSightingActivity extends AppCompatActivity {
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
 
         editLocation = findViewById(R.id.editLocationAddSighting);
+        editDateTime = findViewById(R.id.editDateTimeAddSighting);
 
         if (!Utils.isLocationPermissionGranted(this)) {
             Utils.requestLocationPermission(this, RC_LOCATION);
@@ -54,6 +56,8 @@ public class AddSightingActivity extends AppCompatActivity {
 
         ImageButton btnAddImage = findViewById(R.id.btnAddImageAddSighting);
         btnAddImage.setOnClickListener(v -> launchImageCaptureIntent());
+
+        editDateTime.setText(Utils.formatDate(System.currentTimeMillis()));
     }
 
     @Override

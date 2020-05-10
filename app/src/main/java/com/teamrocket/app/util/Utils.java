@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -20,6 +24,12 @@ import static android.util.DisplayMetrics.DENSITY_DEFAULT;
 import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
 
 public class Utils {
+
+    private static SimpleDateFormat simpleDateFormat;
+
+    static {
+        simpleDateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
+    }
 
     public static LatLng getRandomLocation(LatLng location, int radiusMtrs) {
         Random random = new Random();
@@ -71,5 +81,20 @@ public class Utils {
                 .setMessage(messageId)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
+    }
+
+    public static String formatDate(long timestamp) {
+        Date date = new Date(timestamp);
+        return simpleDateFormat.format(date);
+    }
+
+    public static Date parseDate(String date) {
+        try {
+            return simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return new Date();
     }
 }
