@@ -6,11 +6,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.view.MenuItem;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -19,12 +25,18 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.material.textfield.TextInputEditText;
+import com.squareup.picasso.Picasso;
+import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
+import com.teamrocket.app.data.db.BirdSightingDao;
+import com.teamrocket.app.model.Bird;
+import com.teamrocket.app.model.BirdSighting;
+import com.teamrocket.app.util.TextChangedListener;
 import com.teamrocket.app.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -34,19 +46,37 @@ public class AddSightingActivity extends AppCompatActivity {
     private static final int RC_PHOTO = 122;
     private static final int RC_LOCATION = 333;
 
+    private BirdSightingDao dao;
     private FusedLocationProviderClient locationProvider;
     private LocationCallback locationCallback;
 
-    private TextInputEditText editLocation;
-    private TextInputEditText editDateTime;
+    private String imagePath;
+
+    private EditText editName;
+    private AutoCompleteTextView editFamily;
+    private EditText editLocation;
+    private EditText editDateTime;
+
+    private ImageButton btnMoreInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        setSupportActionBar(findViewById(R.id.toolbarAddSighting));
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        dao = ((BTApplication) getApplication()).getBirdSightingDao();
+        dao.addListener(sighting -> finish());
 
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
 
+        editName = findViewById(R.id.editNameAddSighting);
+        editFamily = findViewById(R.id.editFamilyAddSighting);
         editLocation = findViewById(R.id.editLocationAddSighting);
         editDateTime = findViewById(R.id.editDateTimeAddSighting);
 
@@ -56,6 +86,9 @@ public class AddSightingActivity extends AppCompatActivity {
 
         ImageButton btnAddImage = findViewById(R.id.btnAddImageAddSighting);
         btnAddImage.setOnClickListener(v -> launchImageCaptureIntent());
+
+        Button btnSave = findViewById(R.id.btnSaveAddSighting);
+        btnSave.setOnClickListener(v -> addBird());
 
         editDateTime.setText(Utils.formatDate(System.currentTimeMillis()));
     }
@@ -77,7 +110,12 @@ public class AddSightingActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != RC_PHOTO || resultCode != RESULT_OK) {
+        if (requestCode != RC_PHOTO) {
+            return;
+        }
+
+        if (resultCode != RESULT_OK) {
+            this.imagePath = null;
             return;
         }
     }
@@ -100,7 +138,9 @@ public class AddSightingActivity extends AppCompatActivity {
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult != null) {
                     Location last = locationResult.getLastLocation();
-                    editLocation.setText(last.getLatitude() + ", " + last.getLongitude());
+                    String locationMask = "%.05f, %.05f";
+                    editLocation.setText(String.format(Locale.getDefault(), locationMask,
+                            last.getLatitude(), last.getLongitude()));
                 }
             }
         };
@@ -112,6 +152,40 @@ public class AddSightingActivity extends AppCompatActivity {
         if (locationCallback != null) {
             locationProvider.removeLocationUpdates(locationCallback);
         }
+    }
+
+    private boolean isFormValid() {
+        return imagePath != null
+                && !editLocation.getText().toString().isEmpty()
+                && !editDateTime.getText().toString().isEmpty()
+                && !editName.getText().toString().isEmpty()
+                && !editFamily.getText().toString().isEmpty();
+    }
+
+    private void addBird() {
+        if (!isFormValid()) {
+            Toast.makeText(this, "Please fill all the details", LENGTH_SHORT).show();
+            return;
+        }
+
+        Bird bird = new Bird();
+        bird.setName(editName.getText().toString());
+        bird.setFamily(editFamily.getText().toString());
+        bird.setImagePath(imagePath);
+        bird.setSize(Bird.SIZE_SMALL);
+        bird.setColor("blue");
+
+        String[] locationParts = editLocation.getText().toString().split(", ");
+        double lat = Double.parseDouble(locationParts[0]);
+        double lon = Double.parseDouble(locationParts[1]);
+        BirdSighting.Location location = new BirdSighting.Location(lat, lon);
+
+        String dateString = editDateTime.getText().toString();
+        long time = Utils.parseDate(dateString).getTime();
+
+        BirdSighting sighting = new BirdSighting(bird, location, time);
+
+        dao.insert(sighting);
     }
 
     private void launchImageCaptureIntent() {
@@ -127,6 +201,7 @@ public class AddSightingActivity extends AppCompatActivity {
             return;
         }
 
+        this.imagePath = photoFile.getPath();
         Uri photoUri = FileProvider.getUriForFile(this, "com.teamrocket.app.fileprovider", photoFile);
         photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
         startActivityForResult(photoIntent, RC_PHOTO);
