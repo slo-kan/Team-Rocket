@@ -21,7 +21,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
+import com.teamrocket.app.data.db.BirdSightingDao;
+import com.teamrocket.app.model.BirdSighting;
 import com.teamrocket.app.util.Utils;
 
 import java.util.ArrayList;
@@ -37,16 +40,39 @@ public class MapFragment extends Fragment {
     private GoogleMap map;
     private List<MarkerOptions> markers = new ArrayList<>();
 
+    private BirdSightingDao dao;
+    private BirdSightingDao.Listener listener;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
+        listener = sighting -> {
+            LatLng location = new LatLng(sighting.getLocation().getLat(), sighting.getLocation().getLon());
+            markers.add(new MarkerOptions()
+                    .position(location));
+            showMapMarkers();
+        };
+        dao.addListener(listener);
         return inflater.inflate(R.layout.fragment_map, container, false);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        dao.removeListener(listener);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         locationProvider = LocationServices.getFusedLocationProviderClient(requireActivity());
-        getLocationAndZoom();
+
+        List<BirdSighting> sightings = dao.getAll();
+        for (BirdSighting sighting : sightings) {
+            LatLng location = new LatLng(sighting.getLocation().getLat(), sighting.getLocation().getLon());
+            markers.add(new MarkerOptions()
+                    .position(location));
+        }
 
         if (!Utils.isLocationPermissionGranted(getContext())) {
             Utils.requestLocationPermission(this, RC_LOCATION);
@@ -68,8 +94,19 @@ public class MapFragment extends Fragment {
                 return true;
             });
 
-            updateMapZoom();
+            showMapMarkers();
+            getLocationAndZoom();
         });
+    }
+
+    private void showMapMarkers() {
+        if (map == null) return;
+
+        map.clear();
+        for (MarkerOptions marker : markers) {
+            map.addMarker(marker);
+        }
+        updateMapZoom();
     }
 
     @Override
