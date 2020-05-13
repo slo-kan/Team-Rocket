@@ -38,7 +38,9 @@ public class MapFragment extends Fragment {
     private LatLng lastLocation;
     private FusedLocationProviderClient locationProvider;
     private GoogleMap map;
+
     private List<MarkerOptions> markers = new ArrayList<>();
+    private boolean isFiltered = false;
 
     private BirdSightingDao dao;
     private BirdSightingDao.Listener listener;
@@ -67,11 +69,9 @@ public class MapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         locationProvider = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        List<BirdSighting> sightings = dao.getAll();
-        for (BirdSighting sighting : sightings) {
-            LatLng location = new LatLng(sighting.getLocation().getLat(), sighting.getLocation().getLon());
-            markers.add(new MarkerOptions()
-                    .position(location));
+        if (!isFiltered) {
+            List<BirdSighting> sightings = dao.getAll();
+            setSightingData(sightings, false);
         }
 
         if (!Utils.isLocationPermissionGranted(getContext())) {
@@ -158,5 +158,20 @@ public class MapFragment extends Fragment {
 
         this.map.addMarker(options);
         updateMapZoom();
+    }
+
+    public void setSightingData(List<BirdSighting> sightings) {
+        setSightingData(sightings, true);
+    }
+
+    private void setSightingData(List<BirdSighting> sightings, boolean isFiltered) {
+        this.markers.clear();
+        this.isFiltered = isFiltered;
+        for (BirdSighting sighting : sightings) {
+            LatLng location = new LatLng(sighting.getLocation().getLat(), sighting.getLocation().getLon());
+            markers.add(new MarkerOptions()
+                    .position(location));
+        }
+        showMapMarkers();
     }
 }

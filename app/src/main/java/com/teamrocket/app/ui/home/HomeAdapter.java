@@ -21,12 +21,17 @@ import java.util.List;
 public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
 
     private ArrayList<BirdSighting> sightings = new ArrayList<>();
+    private Listener listener;
+
+    public HomeAdapter(Listener listener) {
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
     public BirdSightingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_home_item, parent, false);
-        return new BirdSightingViewHolder(view);
+        return new BirdSightingViewHolder(view, listener);
     }
 
     @Override
@@ -50,12 +55,19 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
         notifyItemInserted(this.sightings.size());
     }
 
+    public interface Listener {
+        void onClick(BirdSighting sighting);
+    }
+
     static class BirdSightingViewHolder extends ViewHolder {
         private TextView textTitle;
         private ImageView imageBird;
 
-        BirdSightingViewHolder(@NonNull View itemView) {
+        private Listener listener;
+
+        BirdSightingViewHolder(@NonNull View itemView, Listener listener) {
             super(itemView);
+            this.listener = listener;
             textTitle = itemView.findViewById(R.id.textTitleItemSighting);
             imageBird = itemView.findViewById(R.id.imageItemSighting);
         }
@@ -65,6 +77,8 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
 
             Picasso.get().load(new File(birdSighting.getBird().getImagePath()))
                     .fit().centerCrop().into(imageBird);
+
+            itemView.setOnClickListener(v -> listener.onClick(birdSighting));
         }
     }
 }

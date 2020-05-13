@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Fragment currentFragment;
 
+    private BottomNavigationView bottomNavBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         mapFragment = new MapFragment();
         searchFragment = new SearchFragment();
 
-        BottomNavigationView bottomNavBar = findViewById(R.id.bottomNavBar);
+        bottomNavBar = findViewById(R.id.bottomNavBar);
         bottomNavBar.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -58,5 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
         ft.commit();
         currentFragment = fragment;
+    }
+
+    public MapFragment getMapFragment() {
+        return this.mapFragment;
+    }
+
+    public void setBottomNavSelection(int id) {
+        this.bottomNavBar.setSelectedItemId(id);
     }
 }

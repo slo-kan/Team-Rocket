@@ -20,7 +20,9 @@ import com.teamrocket.app.data.db.BirdSightingDao;
 import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
 import com.teamrocket.app.ui.add.AddSightingActivity;
+import com.teamrocket.app.ui.main.MainActivity;
 
+import java.util.List;
 import java.util.Random;
 
 public class HomeFragment extends Fragment {
@@ -48,7 +50,12 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).setSupportActionBar(view.findViewById(R.id.toolbarHome));
 
-        adapter = new HomeAdapter();
+        adapter = new HomeAdapter(sighting -> {
+            List<BirdSighting> similarBirds = dao.findSimilar(sighting);
+            MainActivity activity = (MainActivity) getActivity();
+            activity.getMapFragment().setSightingData(similarBirds);
+            activity.setBottomNavSelection(R.id.main_nav_map);
+        });
 
         ExtendedFloatingActionButton btnAddSighting = view.findViewById(R.id.btnAddSighting);
         btnAddSighting.setOnClickListener(v -> {

@@ -20,6 +20,13 @@ public abstract class BirdSightingDao {
     @Insert
     abstract void _insert(BirdSighting sighting);
 
+    @Query("SELECT * FROM birdsighting WHERE name LIKE :name AND family LIKE :family")
+    abstract List<BirdSighting> _findSimilar(String name, String family);
+
+    public List<BirdSighting> findSimilar(BirdSighting sighting) {
+        return _findSimilar(sighting.getBird().getName(), sighting.getBird().getFamily());
+    }
+
     public void insert(BirdSighting sighting) {
         _insert(sighting);
         for (Listener listener : listeners) {
