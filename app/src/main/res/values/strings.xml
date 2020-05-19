@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Bird Tracking</string>
+    <string name="app_name">Team Rocket - Bird Tracking</string>
+    <string name="app_name_small">Bird Tracking</string>
 
     <string name="main_nav_home">Home</string>
     <string name="main_nav_map">Map</string>
