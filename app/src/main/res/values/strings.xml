@@ -22,4 +22,5 @@
     <string name="add_sighting_title_category_name">Category name</string>
 
     <string name="add_sighting_select_location">Select location</string>
+    <string name="add_sighting_select_datetime">Select date and time</string>
 </resources>

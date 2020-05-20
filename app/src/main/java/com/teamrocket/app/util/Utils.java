@@ -28,7 +28,7 @@ public class Utils {
     private static SimpleDateFormat simpleDateFormat;
 
     static {
-        simpleDateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault());
+        simpleDateFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
     }
 
     public static LatLng getRandomLocation(LatLng location, int radiusMtrs) {

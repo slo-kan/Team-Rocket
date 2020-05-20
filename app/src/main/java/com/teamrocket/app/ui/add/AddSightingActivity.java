@@ -1,5 +1,7 @@
 package com.teamrocket.app.ui.add;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.location.Location;
@@ -47,10 +49,17 @@ import com.teamrocket.app.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
 import static android.widget.Toast.LENGTH_SHORT;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 
 public class AddSightingActivity extends AppCompatActivity {
 
@@ -123,6 +132,7 @@ public class AddSightingActivity extends AppCompatActivity {
         mapView.getMapAsync(gMap -> map = gMap);
 
         editLocation.setOnClickListener(v -> showLocationPickerDialog());
+        editDateTime.setOnClickListener(v -> showDateTimePickerDialog());
 
         ImageButton btnAddImage = findViewById(R.id.btnAddImageAddSighting);
         btnAddImage.setOnClickListener(v -> launchImageCaptureIntent());
@@ -271,6 +281,23 @@ public class AddSightingActivity extends AppCompatActivity {
         if (map != null && zoomToLoc != null) {
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(zoomToLoc, 15));
         }
+    }
+
+    private void showDateTimePickerDialog() {
+        String dateString = editDateTime.getText().toString();
+        Date date = Utils.parseDate(dateString);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+
+        new DatePickerDialog(this, (dView, year, month, day) -> {
+            new TimePickerDialog(this, (tView, hour, minute) -> {
+                Calendar cal = Calendar.getInstance();
+                cal.set(year, month, day, hour, minute);
+                String dateTime = Utils.formatDate(cal.getTime().getTime());
+                editDateTime.setText(dateTime);
+            }, calendar.get(HOUR_OF_DAY), calendar.get(MINUTE), true).show();
+        }, calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH)).show();
     }
 
     private boolean isFormValid() {
