@@ -1,6 +1,7 @@
 package com.teamrocket.app.ui.add;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,6 +28,11 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 import com.teamrocket.app.BTApplication;
@@ -56,6 +63,12 @@ public class AddSightingActivity extends AppCompatActivity {
     private FusedLocationProviderClient locationProvider;
     private LocationCallback locationCallback;
 
+    private View locationPickerView;
+    private MapView mapView;
+
+    private GoogleMap map = null;
+    private Location lastLocation = null;
+
     private String imagePath;
     private String selectedCategory;
 
@@ -71,6 +84,7 @@ public class AddSightingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         setSupportActionBar(findViewById(R.id.toolbarAddSighting));
+        MapsInitializer.initialize(AddSightingActivity.this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -99,6 +113,16 @@ public class AddSightingActivity extends AppCompatActivity {
 
         ImageButton btnAddCategory = findViewById(R.id.btnAddCategoryAddSighting);
         btnAddCategory.setOnClickListener(v -> showAddCategoryDialog());
+
+        //Create the view which is shown when the location picker is opened.
+        //We create this here and load the map to avoid unnecessary object creation later on.
+        locationPickerView = View.inflate(this, R.layout.add_location_picker, null);
+        mapView = locationPickerView.findViewById(R.id.mapLocationPicker);
+        mapView.onCreate(null);
+        mapView.onResume();
+        mapView.getMapAsync(gMap -> map = gMap);
+
+        editLocation.setOnClickListener(v -> showLocationPickerDialog());
 
         ImageButton btnAddImage = findViewById(R.id.btnAddImageAddSighting);
         btnAddImage.setOnClickListener(v -> launchImageCaptureIntent());
@@ -184,10 +208,10 @@ public class AddSightingActivity extends AppCompatActivity {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 if (locationResult != null) {
-                    Location last = locationResult.getLastLocation();
+                    lastLocation = locationResult.getLastLocation();
                     String locationMask = "%.05f, %.05f";
                     editLocation.setText(String.format(Locale.getDefault(), locationMask,
-                            last.getLatitude(), last.getLongitude()));
+                            lastLocation.getLatitude(), lastLocation.getLongitude()));
                 }
             }
         };
@@ -198,6 +222,54 @@ public class AddSightingActivity extends AppCompatActivity {
     private void stopLocationUpdates() {
         if (locationCallback != null) {
             locationProvider.removeLocationUpdates(locationCallback);
+        }
+    }
+
+    private void showLocationPickerDialog() {
+        //A previous dialog may have already shown the map in which case that will remain as the
+        //parent. We need to manually remove the view's parent to show it in another dialog.
+        ViewGroup parent = (ViewGroup) locationPickerView.getParent();
+        if (parent != null) {
+            parent.removeView(locationPickerView);
+        }
+
+        //Find where to zoom in the map.
+        //If there's a location in the edit field, then zoom to it.
+        //Otherwise if location permission is granted and GPS is ON, zoom to the current location.
+        //Otherwise don't zoom.
+        LatLng zoomToLoc = null;
+        String textLocation = editLocation.getText().toString();
+
+        if (!textLocation.isEmpty()) {
+            String[] splits = textLocation.split(",");
+            double lat = Double.parseDouble(splits[0].trim());
+            double lon = Double.parseDouble(splits[1].trim());
+            zoomToLoc = new LatLng(lat, lon);
+        } else if (Utils.isLocationPermissionGranted(this) && lastLocation != null) {
+            zoomToLoc = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        }
+
+        new AlertDialog.Builder(AddSightingActivity.this)
+                .setTitle(R.string.add_sighting_select_location)
+                .setView(locationPickerView)
+                .setPositiveButton(android.R.string.ok, (d, w) -> {
+                    if (map == null) return;
+                    //Projection is used to convert location on the screen to location in map.
+                    //In this case, we need to find the coordinates which correspond to the centre
+                    //of the map.
+                    Projection projection = map.getProjection();
+                    int x = mapView.getWidth() / 2;
+                    int y = mapView.getHeight() / 2;
+                    LatLng centrePosition = projection.fromScreenLocation(new Point(x, y));
+                    String locationMask = "%.05f, %.05f";
+                    editLocation.setText(String.format(Locale.getDefault(), locationMask,
+                            centrePosition.latitude, centrePosition.longitude));
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+
+        if (map != null && zoomToLoc != null) {
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(zoomToLoc, 15));
         }
     }
 
