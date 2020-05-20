@@ -15,5 +15,10 @@
 
     <string name="add_sighting_no_camera">There are no camera apps installed on your device.</string>
     <string name="add_sighting_image_file_error">There was an error while trying to take a photo.</string>
+    <string name="add_sighting_title_select_category">Select category</string>
+    <string name="add_sighting_title_add_category">Add category</string>
+    <string name="add_sighting_cat_name_empty">Can\'t add a category with an empty name</string>
+    <string name="add_sighting_cat_name_exists">An existing category already has the name \'%1$s\'</string>
+    <string name="add_sighting_title_category_name">Category name</string>
 
 </resources>

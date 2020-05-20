@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.MenuItem;
-import android.widget.AutoCompleteTextView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -30,8 +31,10 @@ import com.squareup.picasso.Picasso;
 import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
 import com.teamrocket.app.data.db.BirdSightingDao;
+import com.teamrocket.app.data.db.CategoryDao;
 import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
+import com.teamrocket.app.model.Category;
 import com.teamrocket.app.util.TextChangedListener;
 import com.teamrocket.app.util.Utils;
 
@@ -48,13 +51,16 @@ public class AddSightingActivity extends AppCompatActivity {
     private static final int RC_LOCATION = 333;
 
     private BirdSightingDao dao;
+    private CategoryDao categoryDao;
+
     private FusedLocationProviderClient locationProvider;
     private LocationCallback locationCallback;
 
     private String imagePath;
+    private String selectedCategory;
 
     private EditText editName;
-    private AutoCompleteTextView editFamily;
+    private EditText editFamily;
     private EditText editLocation;
     private EditText editDateTime;
 
@@ -74,6 +80,9 @@ public class AddSightingActivity extends AppCompatActivity {
         dao = ((BTApplication) getApplication()).getBirdSightingDao();
         dao.addListener(sighting -> finish());
 
+        categoryDao = ((BTApplication) getApplication()).getCategoryDao();
+        categoryDao.populateDefaults(getApplicationContext());
+
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
 
         editName = findViewById(R.id.editNameAddSighting);
@@ -85,6 +94,11 @@ public class AddSightingActivity extends AppCompatActivity {
         if (!Utils.isLocationPermissionGranted(this)) {
             Utils.requestLocationPermission(this, RC_LOCATION);
         }
+
+        editFamily.setOnClickListener(v -> showSelectCategoryDialog());
+
+        ImageButton btnAddCategory = findViewById(R.id.btnAddCategoryAddSighting);
+        btnAddCategory.setOnClickListener(v -> showAddCategoryDialog());
 
         ImageButton btnAddImage = findViewById(R.id.btnAddImageAddSighting);
         btnAddImage.setOnClickListener(v -> launchImageCaptureIntent());
@@ -256,4 +270,50 @@ public class AddSightingActivity extends AppCompatActivity {
         return tempFile;
     }
 
+    private void showSelectCategoryDialog() {
+        String[] categories = categoryDao.getAll()
+                .stream()
+                .map(Category::getName)
+                .toArray(size -> new String[categoryDao.getNumCategories()]);
+
+        new AlertDialog.Builder(AddSightingActivity.this)
+                .setTitle(R.string.add_sighting_title_select_category)
+                .setSingleChoiceItems(categories, -1, (d, w) -> {
+                    this.selectedCategory = categories[w];
+                    editFamily.setText(this.selectedCategory);
+                })
+                .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, (d, w) -> editFamily.setText(""))
+                .show();
+    }
+
+    private void showAddCategoryDialog() {
+        View dialogView = View.inflate(this, R.layout.add_dialog_add_category, null);
+        EditText editCategory = dialogView.findViewById(R.id.editCategoryAddCategory);
+        editCategory.requestFocus();
+
+        new AlertDialog.Builder(AddSightingActivity.this)
+                .setTitle(R.string.add_sighting_title_add_category)
+                .setView(dialogView)
+                .setPositiveButton(android.R.string.ok, (d, w) -> {
+                    String categoryName = editCategory.getText().toString();
+                    boolean isValid = !categoryName.isEmpty()
+                            && categoryDao.getNumCategories(categoryName) == 0;
+
+                    if (!isValid) {
+                        String message = categoryName.isEmpty()
+                                ? getString(R.string.add_sighting_cat_name_empty)
+                                : getString(R.string.add_sighting_cat_name_exists, categoryName);
+
+                        Toast.makeText(this, message, LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Category category = new Category(categoryName);
+                    categoryDao.insert(category);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+
+    }
 }
