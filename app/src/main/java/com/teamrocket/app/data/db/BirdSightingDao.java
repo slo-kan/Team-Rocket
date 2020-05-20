@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
 
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ public abstract class BirdSightingDao {
     @Query("SELECT * FROM birdsighting WHERE name LIKE :name AND family LIKE :family")
     abstract List<BirdSighting> _findSimilar(String name, String family);
 
-    public List<BirdSighting> findSimilar(BirdSighting sighting) {
-        return _findSimilar(sighting.getBird().getName(), sighting.getBird().getFamily());
+    public List<BirdSighting> findSimilar(Bird bird) {
+        return _findSimilar(bird.getName(), bird.getFamily());
     }
 
     public void insert(BirdSighting sighting) {

@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         else
             ft.hide(currentFragment).show(fragment);
 
+        //We need to reset the filters for map fragment somehow, this is one approach to do that.
+        //In this case, whatever wants to set filters should do that after this call.
+        if (fragment == mapFragment && mapFragment.shouldResetFilters) {
+            mapFragment.filterBird(null);
+        }
+
         ft.commit();
         currentFragment = fragment;
     }

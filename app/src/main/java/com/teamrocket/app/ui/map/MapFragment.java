@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
 import com.teamrocket.app.data.db.BirdSightingDao;
+import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
 import com.teamrocket.app.util.Utils;
 
@@ -40,7 +41,13 @@ public class MapFragment extends Fragment {
     private GoogleMap map;
 
     private List<MarkerOptions> markers = new ArrayList<>();
-    private boolean isFiltered = false;
+
+    //This variable is used to check whether filters can be reset when the user clicks 'Map'
+    //from the bottom navigation bar. Since we are delegating list item clicks and bottom nav bar
+    // clicks to the bottom nav bar itself, we need this variable to distinguish
+    // which the user actually clicked.
+    public boolean shouldResetFilters = true;
+    private Bird currentFilteredBird = null;
 
     private BirdSightingDao dao;
     private BirdSightingDao.Listener listener;
@@ -50,6 +57,7 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         listener = sighting -> {
+            //TODO: Take into consideration the filters before updating markers
             LatLng location = new LatLng(sighting.getLocation().getLat(), sighting.getLocation().getLon());
             markers.add(new MarkerOptions()
                     .position(location));
@@ -69,10 +77,7 @@ public class MapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         locationProvider = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        if (!isFiltered) {
-            List<BirdSighting> sightings = dao.getAll();
-            setSightingData(sightings, false);
-        }
+        filterBird(null, true);
 
         if (!Utils.isLocationPermissionGranted(getContext())) {
             Utils.requestLocationPermission(this, RC_LOCATION);
@@ -132,7 +137,7 @@ public class MapFragment extends Fragment {
         }
         LatLngBounds bounds = boundsBuilder.build();
 
-        int padding = Utils.toDp(32, requireContext());
+        int padding = Utils.toDp(196, requireContext());
         map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
     }
 
@@ -160,18 +165,31 @@ public class MapFragment extends Fragment {
         updateMapZoom();
     }
 
-    public void setSightingData(List<BirdSighting> sightings) {
-        setSightingData(sightings, true);
+    public void filterBird(Bird filterBird) {
+        filterBird(filterBird, false);
     }
 
-    private void setSightingData(List<BirdSighting> sightings, boolean isFiltered) {
-        this.markers.clear();
-        this.isFiltered = isFiltered;
-        for (BirdSighting sighting : sightings) {
-            LatLng location = new LatLng(sighting.getLocation().getLat(), sighting.getLocation().getLon());
-            markers.add(new MarkerOptions()
-                    .position(location));
+    public void filterBird(Bird filterBird, boolean force) {
+        if (!shouldResetFilters) {
+            shouldResetFilters = true;
         }
+
+        if (currentFilteredBird == filterBird && !force) {
+            return;
+        }
+
+        List<BirdSighting> sightings = filterBird == null
+                ? dao.getAll() : dao.findSimilar(filterBird);
+
+        this.markers.clear();
+        for (BirdSighting sighting : sightings) {
+            BirdSighting.Location sLocation = sighting.getLocation();
+            LatLng location = new LatLng(sLocation.getLat(), sLocation.getLon());
+            markers.add(new MarkerOptions().position(location));
+        }
+
         showMapMarkers();
+
+        currentFilteredBird = filterBird;
     }
 }
