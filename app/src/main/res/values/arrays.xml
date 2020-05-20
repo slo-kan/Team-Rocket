@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories">
+        <item>Hummingbirds</item>
+        <item>Owls</item>
+        <item>Parrots</item>
+        <item>Songbirds</item>
+        <item>Sparrows</item>
+        <item>Woodpeckers</item>
+    </string-array>
+</resources>

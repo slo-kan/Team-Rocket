@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.room.Room;
 
 import com.teamrocket.app.data.db.BirdSightingDao;
+import com.teamrocket.app.data.db.CategoryDao;
 import com.teamrocket.app.data.db.Database;
 
 public class BTApplication extends Application {
@@ -18,11 +19,16 @@ public class BTApplication extends Application {
         super.onCreate();
         database = Room.databaseBuilder(this, Database.class, DB_NAME)
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .build();
     }
 
     public BirdSightingDao getBirdSightingDao() {
         return database.birdSightingDao();
+    }
+
+    public CategoryDao getCategoryDao() {
+        return database.categoryDao();
     }
 
 }
