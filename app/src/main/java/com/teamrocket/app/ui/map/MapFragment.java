@@ -57,10 +57,12 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         listener = sighting -> {
-            //TODO: Take into consideration the filters before updating markers
-            LatLng location = new LatLng(sighting.getLocation().getLat(), sighting.getLocation().getLon());
-            markers.add(new MarkerOptions()
-                    .position(location));
+            //If the current markers don't belong to this bird, then don't add them to the list.
+            if (currentFilteredBird != sighting.getBird()) return;
+
+            BirdSighting.Location birdLoc = sighting.getLocation();
+            LatLng location = new LatLng(birdLoc.getLat(), birdLoc.getLon());
+            markers.add(new MarkerOptions().position(location));
             showMapMarkers();
         };
         dao.addListener(listener);
@@ -77,7 +79,7 @@ public class MapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         locationProvider = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        filterBird(null, true);
+        filterBird(currentFilteredBird, true);
 
         if (!Utils.isLocationPermissionGranted(getContext())) {
             Utils.requestLocationPermission(this, RC_LOCATION);
@@ -175,6 +177,13 @@ public class MapFragment extends Fragment {
         }
 
         if (currentFilteredBird == filterBird && !force) {
+            return;
+        }
+
+        //DAO might be null if the fragment is not attached yet.
+        //Showing the markers will be handled by onCreateView when the fragment is attached
+        if (dao == null) {
+            currentFilteredBird = filterBird;
             return;
         }
 
