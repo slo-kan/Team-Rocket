@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -65,6 +67,7 @@ public class AddSightingActivity extends AppCompatActivity {
 
     private static final int RC_PHOTO = 122;
     private static final int RC_LOCATION = 333;
+    private static final String URL_WIKIPEDIA = "https://wikipedia.org/wiki/%s";
 
     private BirdSightingDao dao;
     private CategoryDao categoryDao;
@@ -144,7 +147,15 @@ public class AddSightingActivity extends AppCompatActivity {
 
         btnMoreInfo.setImageAlpha(0x3F);
         btnMoreInfo.setEnabled(false);
+        btnMoreInfo.setOnClickListener(v -> {
+            String url = String.format(URL_WIKIPEDIA, editName.getText().toString());
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(url));
+            startActivity(browserIntent);
+        });
+
         editName.addTextChangedListener(new TextChangedListener(count -> {
+            Log.d("AddSighting", "onCreate: Count is " + count);
             btnMoreInfo.setImageAlpha(count > 3 ? 0xFF : 0x3F);
             btnMoreInfo.setEnabled(count > 3);
         }));

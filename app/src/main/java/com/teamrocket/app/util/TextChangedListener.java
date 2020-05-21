@@ -18,7 +18,7 @@ public class TextChangedListener implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        listener.onTextChanged(count);
+        listener.onTextChanged(s.length());
     }
 
     @Override
