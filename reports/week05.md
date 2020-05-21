@@ -34,7 +34,7 @@
 ## Plans for next week
 
 *  Test and fix any bugs or small issues in the app.
-*  Implement some smaller features such as validation while adding bird sighting, using a custom marker to show bird instead of the default, etc.
+*  Implement some smaller features such as validation while adding bird sighting, using a custom marker to show bird instead of the default, and also add the app icon.
 *  Start working on the blog and presentation ahead of the first milestone.
 
 ## Meeting agenda
