@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +17,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.teamrocket.app.BTApplication;
@@ -57,13 +55,12 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         listener = sighting -> {
-            //If the current markers don't belong to this bird, then don't add them to the list.
-            if (currentFilteredBird != sighting.getBird()) return;
-
-            BirdSighting.Location birdLoc = sighting.getLocation();
-            LatLng location = new LatLng(birdLoc.getLat(), birdLoc.getLon());
-            markers.add(new MarkerOptions().position(location));
-            showMapMarkers();
+            if (currentFilteredBird == null || sighting.getBird().equals(currentFilteredBird)) {
+                BirdSighting.Location birdLoc = sighting.getLocation();
+                LatLng location = new LatLng(birdLoc.getLat(), birdLoc.getLon());
+                markers.add(new MarkerOptions().position(location));
+                showMapMarkers();
+            }
         };
         dao.addListener(listener);
         return inflater.inflate(R.layout.fragment_map, container, false);
@@ -95,11 +92,6 @@ public class MapFragment extends Fragment {
                 this.map.getUiSettings().setMyLocationButtonEnabled(false);
                 updateMapZoom();
             }
-
-            this.map.setOnMarkerClickListener(marker -> {
-                onMarkerClicked(marker);
-                return true;
-            });
 
             showMapMarkers();
             getLocationAndZoom();
@@ -154,17 +146,6 @@ public class MapFragment extends Fragment {
             map.setMyLocationEnabled(true);
             updateMapZoom();
         });
-    }
-
-    private void onMarkerClicked(Marker marker) {
-        Toast.makeText(getContext(), "Marking a random location", Toast.LENGTH_SHORT).show();
-
-        LatLng loc = Utils.getRandomLocation(marker.getPosition(), 1000);
-        MarkerOptions options = new MarkerOptions().position(loc).title("Marker");
-        markers.add(options);
-
-        this.map.addMarker(options);
-        updateMapZoom();
     }
 
     public void filterBird(Bird filterBird) {

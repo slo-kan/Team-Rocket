@@ -159,7 +159,9 @@ public class AddSightingActivity extends AppCompatActivity {
             btnMoreInfo.setEnabled(count > 3);
         }));
 
-        findViewById(R.id.btnRandomise).setOnClickListener(v -> {
+        Button randomiseButton = findViewById(R.id.btnRandomise);
+        randomiseButton.setVisibility(View.GONE);
+        randomiseButton.setOnClickListener(v -> {
             String[] locationParts = editLocation.getText().toString().split(", ");
             if (locationParts.length != 2) return;
 
