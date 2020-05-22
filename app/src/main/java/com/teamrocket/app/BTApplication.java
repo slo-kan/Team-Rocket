@@ -18,8 +18,8 @@ public class BTApplication extends Application {
     public void onCreate() {
         super.onCreate();
         database = Room.databaseBuilder(this, Database.class, DB_NAME)
+                .addMigrations(Database.MIGRATION_1_2)
                 .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
                 .build();
     }
 
