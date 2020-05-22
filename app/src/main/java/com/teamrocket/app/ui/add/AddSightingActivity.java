@@ -19,7 +19,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -421,6 +420,7 @@ public class AddSightingActivity extends AppCompatActivity {
 
                     Category category = new Category(categoryName);
                     categoryDao.insert(category);
+                    editFamily.setText(categoryName);
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
