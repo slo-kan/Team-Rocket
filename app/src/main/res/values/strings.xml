@@ -8,6 +8,7 @@
     <string name="main_nav_search">Search</string>
 
     <string name="home_add_sighting">Add Sighting</string>
+    <string name="home_msg_no_sightings">You haven\'t added any bird sightings. Add one by tapping the button below.</string>
     <string name="title_add_sighting">Add Sighting</string>
 
     <string name="map_gps_dialog_title">GPS is turned off</string>

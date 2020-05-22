@@ -22,22 +22,27 @@ import com.teamrocket.app.model.BirdSighting;
 import com.teamrocket.app.ui.add.AddSightingActivity;
 import com.teamrocket.app.ui.main.MainActivity;
 
+import java.util.List;
 import java.util.Random;
 
 public class HomeFragment extends Fragment {
 
     public static final String TAG = "homeFragment";
 
-
     private BirdSightingDao dao;
+    private BirdSightingDao.Listener listener;
+
     private HomeAdapter adapter;
 
-    private BirdSightingDao.Listener listener;
+    private View emptyView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        listener = sighting -> adapter.addSighting(sighting);
+        listener = sighting -> {
+            adapter.addSighting(sighting);
+            emptyView.setVisibility(View.GONE);
+        };
 
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         dao.addListener(listener);
@@ -59,6 +64,8 @@ public class HomeFragment extends Fragment {
             activity.getMapFragment().filterBird(sighting.getBird());
         });
 
+        emptyView = view.findViewById(R.id.viewNoSightings);
+
         ExtendedFloatingActionButton btnAddSighting = view.findViewById(R.id.btnAddSighting);
         btnAddSighting.setOnClickListener(v -> {
             startActivity(new Intent(getActivity(), AddSightingActivity.class));
@@ -77,7 +84,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        adapter.update(dao.getAll());
+        List<BirdSighting> sightings = dao.getAll();
+        adapter.update(sightings);
+        if (sightings.isEmpty()) emptyView.setVisibility(View.VISIBLE);
     }
 
     @Override
