@@ -222,6 +222,10 @@ public class AddSightingActivity extends AppCompatActivity {
     }
 
     private void startLocationUpdates() {
+        //This will be called in onResume so we should only update the location if the
+        //location field is empty.
+        if (!editLocation.getText().toString().isEmpty()) return;
+
         LocationRequest request = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setFastestInterval(120 * 1000);
