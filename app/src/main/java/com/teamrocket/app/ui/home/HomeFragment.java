@@ -73,7 +73,6 @@ public class HomeFragment extends Fragment {
         });
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerHome);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
