@@ -45,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
         showFragment(homeFragment);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (currentFragment != homeFragment) {
+            setBottomNavSelection(R.id.main_nav_home);
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
     private void showFragment(Fragment fragment) {
         if (currentFragment == fragment) return;
 
