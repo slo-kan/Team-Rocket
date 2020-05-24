@@ -14,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:alpha="0.5"
         android:src="@drawable/ic_gps_24"
-        android:tint="@color/gray_t_2" />
+        android:tint="?colorPrimary" />
 
 </FrameLayout>
