@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,9 +153,8 @@ public class AddSightingActivity extends AppCompatActivity {
         });
 
         editName.addTextChangedListener(new TextChangedListener(count -> {
-            Log.d("AddSighting", "onCreate: Count is " + count);
-            btnMoreInfo.setImageAlpha(count > 3 ? 0xFF : 0x3F);
-            btnMoreInfo.setEnabled(count > 3);
+            btnMoreInfo.setImageAlpha(count > 0 ? 0xFF : 0x3F);
+            btnMoreInfo.setEnabled(count > 0);
         }));
 
         Button randomiseButton = findViewById(R.id.btnRandomise);
