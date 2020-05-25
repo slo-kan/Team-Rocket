@@ -8,14 +8,16 @@
 
 ## vasudev
 
+*  worked on testing the app to find the app is running smooth to be smooth and bug's free.
 
 ## lokesh
  
 *  Has worked on autofull category when added for the first time.
+*  Has implemented uml activity and use case diagrams and also behavioral diagrams required for our app.
 
 ## sreepradh
 
-*  worked on testing the app to find the app to be smooth and bug's free.
+*  worked on testing the app to find the app is running smooth to be smooth and bug's free.
 
 ## rahul
 
@@ -27,6 +29,6 @@
 
 # Meeting agenda
 
-
 *  Demonstrate the working of the app, get feedback and suggestions, and make any changes if necessary.
-*  Discuss about the blog and presentation for the first milestone
+
+*  Discuss about the blog and presentation for the second milestone.
