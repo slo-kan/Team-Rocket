@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,6 +55,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.HOUR_OF_DAY;
@@ -87,7 +90,7 @@ public class AddSightingActivity extends AppCompatActivity {
     private EditText editLocation;
     private EditText editDateTime;
 
-    private ImageButton btnMoreInfo;
+    private TextView btnMoreInfo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,7 +124,7 @@ public class AddSightingActivity extends AppCompatActivity {
 
         editFamily.setOnClickListener(v -> showSelectCategoryDialog());
 
-        ImageButton btnAddCategory = findViewById(R.id.btnAddCategoryAddSighting);
+        TextView btnAddCategory = findViewById(R.id.btnAddCategoryAddSighting);
         btnAddCategory.setOnClickListener(v -> showAddCategoryDialog());
 
         //Create the view which is shown when the location picker is opened.
@@ -143,7 +146,6 @@ public class AddSightingActivity extends AppCompatActivity {
 
         editDateTime.setText(Utils.formatDate(System.currentTimeMillis()));
 
-        btnMoreInfo.setImageAlpha(0x3F);
         btnMoreInfo.setEnabled(false);
         btnMoreInfo.setOnClickListener(v -> {
             String url = String.format(URL_WIKIPEDIA, editName.getText().toString());
@@ -153,7 +155,6 @@ public class AddSightingActivity extends AppCompatActivity {
         });
 
         editName.addTextChangedListener(new TextChangedListener(count -> {
-            btnMoreInfo.setImageAlpha(count > 0 ? 0xFF : 0x3F);
             btnMoreInfo.setEnabled(count > 0);
         }));
 
