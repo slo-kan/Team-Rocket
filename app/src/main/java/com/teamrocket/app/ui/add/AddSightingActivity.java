@@ -1,5 +1,6 @@
 package com.teamrocket.app.ui.add;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -220,6 +221,7 @@ public class AddSightingActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
         //This will be called in onResume so we should only update the location if the
         //location field is empty.
@@ -325,7 +327,7 @@ public class AddSightingActivity extends AppCompatActivity {
 
     private void addBird() {
         if (!isFormValid()) {
-            Toast.makeText(this, "Please fill all the details", LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.add_sighting_msg_fill_details, LENGTH_SHORT).show();
             return;
         }
 

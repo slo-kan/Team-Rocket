@@ -21,7 +21,14 @@
     <string name="add_sighting_cat_name_empty">Can\'t add a category with an empty name</string>
     <string name="add_sighting_cat_name_exists">An existing category already has the name \'%1$s\'</string>
     <string name="add_sighting_title_category_name">Category name</string>
-
     <string name="add_sighting_select_location">Select location</string>
     <string name="add_sighting_select_datetime">Select date and time</string>
+    <string name="add_sighting_title_location">Location</string>
+    <string name="add_sighting_title_datetime">Date and time</string>
+    <string name="add_sighting_title_bird_name">Bird name</string>
+    <string name="add_sighting_title_more_info">More info</string>
+    <string name="add_sighting_category">Bird category</string>
+    <string name="add_sighting_title_save">Save</string>
+    <string name="add_sighting_msg_fill_details">Please fill all the details</string>
+
 </resources>

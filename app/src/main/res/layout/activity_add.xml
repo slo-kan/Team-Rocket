@@ -58,7 +58,7 @@
                 android:id="@+id/textLocationAddSighting"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Location"
+                android:text="@string/add_sighting_title_location"
                 android:textColor="@color/gray_9"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +86,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Date and time"
+                android:text="@string/add_sighting_title_datetime"
                 android:textColor="@color/gray_9"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="@id/textLocationAddSighting"
@@ -118,7 +118,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
-            android:text="Bird name"
+            android:text="@string/add_sighting_title_bird_name"
             android:textColor="@color/gray_9"
             android:textSize="14sp" />
 
@@ -142,7 +142,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
             android:padding="8dp"
-            android:text="More info"
+            android:text="@string/add_sighting_title_more_info"
             android:textColor="?colorPrimary"
             android:textSize="13sp" />
 
@@ -153,7 +153,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="4dp"
-            android:text="Bird category"
+            android:text="@string/add_sighting_category"
             android:textColor="@color/gray_9"
             android:textSize="14sp" />
 
@@ -201,7 +201,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:text="Save"
+            android:text="@string/add_sighting_title_save"
             android:textAllCaps="false" />
 
     </LinearLayout>
