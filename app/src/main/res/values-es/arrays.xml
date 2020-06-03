@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories">
+        <item>Colibríes</item>
+        <item>Búhos</item>
+        <item>Loras</item>
+        <item>Pájaros cantores</item>
+        <item>Gorriones</item>
+        <item>Pájaros carpinteros</item>
+    </string-array>
+</resources>

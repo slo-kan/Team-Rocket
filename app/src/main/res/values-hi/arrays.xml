@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="categories">
+        <item>गिनगिनानेवालापक्षियों</item>
+        <item>उल्लू</item>
+        <item>तोते</item>
+        <item>गाने वाले पंछी</item>
+        <item>गौरैया</item>
+        <item>कठफोड़वा</item>
+    </string-array>
+</resources>
