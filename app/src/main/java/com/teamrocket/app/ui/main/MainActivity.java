@@ -1,7 +1,13 @@
 package com.teamrocket.app.ui.main;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -11,6 +17,8 @@ import com.teamrocket.app.R;
 import com.teamrocket.app.ui.home.HomeFragment;
 import com.teamrocket.app.ui.map.MapFragment;
 import com.teamrocket.app.ui.search.SearchFragment;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        changeLocale("German");
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
 
         homeFragment = new HomeFragment();
@@ -84,5 +95,45 @@ public class MainActivity extends AppCompatActivity {
 
     public void setBottomNavSelection(int id) {
         this.bottomNavBar.setSelectedItemId(id);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_change_language) {
+            showLanguageChangeDialog();
+        }
+        return true;
+    }
+
+    private void showLanguageChangeDialog() {
+        String[] languages = {"Default", "English", "German", "Spanish", "Hindi"};
+
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle(R.string.home_title_change_language)
+                .setSingleChoiceItems(languages, -1, (d, w) -> {
+                    changeLocale(languages[w]);
+                })
+                .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void changeLocale(String lang) {
+        Configuration conf = getResources().getConfiguration();
+        Locale locale;
+        if (lang.equals("English")) locale = Locale.ENGLISH;
+        else if (lang.equals("German")) locale = new Locale("de");
+        else if (lang.equals("Spanish")) locale = Locale.forLanguageTag("es");
+        else locale = Locale.getDefault();
+
+        conf.setLocale(locale);
+//        recreate();
     }
 }

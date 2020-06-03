@@ -10,7 +10,7 @@
     <string name="home_add_sighting">Sichtung hinzufügen</string>
     <string name="home_msg_no_sightings">Sie haben keine Vogelbeobachtungen hinzugefügt. Fügen Sie eine hinzu, indem Sie auf die Schaltfläche unten tippen..</string>
     <string name="title_add_sighting">Sichtung hinzufügen</string>
-
+    <string name="home_title_change_language">Sprache ändern</string>
     <string name="map_gps_dialog_title"> GPS ist ausgeschaltet </string>
     <string name="map_gps_dialog_message">Sie können immer noch Ihren Vogelbeobachtungsverlauf sehen, aber Ihr aktueller Standort wird nicht angezeigt.</string>
 

@@ -9,6 +9,7 @@
 
     <string name="home_add_sighting">Agregar avistamiento</string>
     <string name="home_msg_no_sightings">No ha agregado ningún avistamiento de aves. Agregue uno tocando el botón de abajo.</string>
+    <string name="home_title_change_language">Cambiar idioma</string>
     <string name="title_add_sighting">Agregar avistamiento</string>
 
     <string name="map_gps_dialog_title">GPS esta apagado</string>
