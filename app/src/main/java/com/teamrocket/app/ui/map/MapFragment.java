@@ -1,5 +1,9 @@
 package com.teamrocket.app.ui.map;
 
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,10 +19,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.squareup.picasso.Picasso;
 import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
 import com.teamrocket.app.data.db.BirdSightingDao;
@@ -29,6 +37,8 @@ import com.teamrocket.app.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.core.content.ContextCompat.getDrawable;
+
 public class MapFragment extends Fragment {
 
     public static final String TAG = "mapFragment";
@@ -38,6 +48,7 @@ public class MapFragment extends Fragment {
     private FusedLocationProviderClient locationProvider;
     private GoogleMap map;
 
+    private List<BirdSighting> sightings = new ArrayList<>();
     private List<MarkerOptions> markers = new ArrayList<>();
 
     //This variable is used to check whether filters can be reset when the user clicks 'Map'
@@ -56,6 +67,7 @@ public class MapFragment extends Fragment {
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         listener = sighting -> {
             if (currentFilteredBird == null || sighting.getBird().equals(currentFilteredBird)) {
+                this.sightings.add(sighting);
                 BirdSighting.Location birdLoc = sighting.getLocation();
                 LatLng location = new LatLng(birdLoc.getLat(), birdLoc.getLon());
                 markers.add(new MarkerOptions().position(location));
@@ -72,6 +84,7 @@ public class MapFragment extends Fragment {
         dao.removeListener(listener);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         locationProvider = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -102,8 +115,9 @@ public class MapFragment extends Fragment {
         if (map == null) return;
 
         map.clear();
-        for (MarkerOptions marker : markers) {
-            map.addMarker(marker);
+        for (int i = 0; i < markers.size(); i++) {
+            Marker m = map.addMarker(markers.get(i));
+            getMarkerIcon(m, sightings.get(i));
         }
         updateMapZoom();
     }
@@ -135,10 +149,12 @@ public class MapFragment extends Fragment {
         map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
     }
 
+    @SuppressLint("MissingPermission")
     private void getLastLocation(OnSuccessListener<Location> onSuccess) {
         this.locationProvider.getLastLocation().addOnSuccessListener(onSuccess);
     }
 
+    @SuppressLint("MissingPermission")
     private void getLocationAndZoom() {
         getLastLocation(loc -> {
             if (loc == null) return;
@@ -168,18 +184,28 @@ public class MapFragment extends Fragment {
             return;
         }
 
-        List<BirdSighting> sightings = filterBird == null
+        this.sightings = filterBird == null
                 ? dao.getAll() : dao.findSimilar(filterBird);
 
         this.markers.clear();
         for (BirdSighting sighting : sightings) {
             BirdSighting.Location sLocation = sighting.getLocation();
             LatLng location = new LatLng(sLocation.getLat(), sLocation.getLon());
-            markers.add(new MarkerOptions().position(location));
+            MarkerOptions options = new MarkerOptions().position(location);
+            markers.add(options);
         }
 
         showMapMarkers();
 
         currentFilteredBird = filterBird;
+    }
+
+    private void getMarkerIcon(Marker marker, BirdSighting birdSighting) {
+        int iconSize = Utils.toPx(40, requireContext());
+
+        Picasso.get().load(birdSighting.getBird().getUriPath())
+                .resize(iconSize, iconSize)
+                .centerCrop()
+                .into(new ImageMarker(requireContext(), marker));
     }
 }

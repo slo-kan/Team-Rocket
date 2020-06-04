@@ -3,7 +3,6 @@ package com.teamrocket.app.util;
 import android.app.Activity;
 import android.content.Context;
 import android.location.LocationManager;
-import android.util.DisplayMetrics;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -20,7 +19,6 @@ import java.util.Random;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.Context.LOCATION_SERVICE;
-import static android.util.DisplayMetrics.DENSITY_DEFAULT;
 import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
 
 public class Utils {
@@ -65,8 +63,11 @@ public class Utils {
     }
 
     public static int toDp(float px, Context context) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return (int) (px / ((float) metrics.densityDpi / DENSITY_DEFAULT));
+        return (int) (px / context.getResources().getDisplayMetrics().density);
+    }
+
+    public static int toPx(float dp, Context context) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 
     public static boolean isLocationPermissionGranted(Context context) {
