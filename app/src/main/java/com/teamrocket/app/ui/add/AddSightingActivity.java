@@ -55,9 +55,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.os.Environment.DIRECTORY_PICTURES;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.HOUR_OF_DAY;
@@ -67,8 +67,11 @@ import static java.util.Calendar.YEAR;
 
 public class AddSightingActivity extends AppCompatActivity {
 
-    private static final int RC_PHOTO = 122;
+    private static final int RC_CAPTURE_PHOTO = 122;
+    private static final int RC_PICK_PHOTO = 123;
     private static final int RC_LOCATION = 333;
+    private static final int RC_STORAGE = 334;
+
     private static final String URL_WIKIPEDIA = "https://wikipedia.org/wiki/%s";
 
     private BirdSightingDao dao;
@@ -86,6 +89,7 @@ public class AddSightingActivity extends AppCompatActivity {
     private String imagePath;
     private String selectedCategory;
 
+    private ImageView imageThumbnail;
     private EditText editName;
     private EditText editFamily;
     private EditText editLocation;
@@ -113,6 +117,7 @@ public class AddSightingActivity extends AppCompatActivity {
 
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
 
+        imageThumbnail = findViewById(R.id.imageAddSighting);
         editName = findViewById(R.id.editNameAddSighting);
         editFamily = findViewById(R.id.editFamilyAddSighting);
         editLocation = findViewById(R.id.editLocationAddSighting);
@@ -141,6 +146,17 @@ public class AddSightingActivity extends AppCompatActivity {
 
         ImageButton btnAddImage = findViewById(R.id.btnAddImageAddSighting);
         btnAddImage.setOnClickListener(v -> launchImageCaptureIntent());
+
+        ImageButton btnPickImage = findViewById(R.id.btnPickImageAddSighting);
+        btnPickImage.setOnClickListener(v -> {
+            //TODO: Check if location permission even required for SAF
+            if (!Utils.isPermissionGranted(this, READ_EXTERNAL_STORAGE)) {
+                Utils.requestPermission(this, READ_EXTERNAL_STORAGE, RC_STORAGE);
+                return;
+            }
+
+            launchImagePickIntent();
+        });
 
         Button btnSave = findViewById(R.id.btnSaveAddSighting);
         btnSave.setOnClickListener(v -> addBird());
@@ -200,25 +216,35 @@ public class AddSightingActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != RC_PHOTO) {
-            return;
-        }
 
         if (resultCode != RESULT_OK) {
             this.imagePath = null;
             return;
         }
 
-        Picasso.get().load(new File(imagePath)).fit().centerCrop()
-                .into((ImageView) findViewById(R.id.imageAddSighting));
+        //If image is captured from the camera, the image path is already set
+        if (requestCode == RC_PICK_PHOTO && data != null) {
+            Uri imageUri = data.getData();
+            if (imageUri != null) {
+                getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                this.imagePath = imageUri.toString();
+            }
+        }
+
+        String path = imagePath.startsWith("content://") ? imagePath : "file://" + imagePath;
+        Picasso.get().load(path).fit().centerCrop().into(imageThumbnail);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == RC_LOCATION && Utils.isLocationPermissionGranted(grantResults)) {
-            startLocationUpdates();
+
+        if (grantResults[0] != PERMISSION_GRANTED) {
+            return;
         }
+
+        if (requestCode == RC_LOCATION) startLocationUpdates();
+        else if (requestCode == RC_STORAGE) launchImagePickIntent();
     }
 
     @SuppressLint("MissingPermission")
@@ -367,7 +393,7 @@ public class AddSightingActivity extends AppCompatActivity {
         this.imagePath = photoFile.getPath();
         Uri photoUri = FileProvider.getUriForFile(this, "com.teamrocket.app.fileprovider", photoFile);
         photoIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-        startActivityForResult(photoIntent, RC_PHOTO);
+        startActivityForResult(photoIntent, RC_CAPTURE_PHOTO);
 
     }
 
@@ -384,6 +410,20 @@ public class AddSightingActivity extends AppCompatActivity {
         }
 
         return tempFile;
+    }
+
+    private void launchImagePickIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+
+        if (intent.resolveActivity(getPackageManager()) == null) {
+            //There are no applications that can handle this intent
+            return;
+        }
+
+        startActivityForResult(intent, RC_PICK_PHOTO);
     }
 
     private void showSelectCategoryDialog() {

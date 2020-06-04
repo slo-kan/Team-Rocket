@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 import com.teamrocket.app.R;
 import com.teamrocket.app.model.BirdSighting;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,9 +73,7 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
 
         void bind(BirdSighting birdSighting) {
             textTitle.setText(birdSighting.getBird().getName());
-
-            Picasso.get().load(new File(birdSighting.getBird().getImagePath()))
-                    .fit().centerCrop().into(imageBird);
+            Picasso.get().load(birdSighting.getBird().getUriPath()).fit().centerCrop().into(imageBird);
 
             itemView.setOnClickListener(v -> listener.onClick(birdSighting));
         }

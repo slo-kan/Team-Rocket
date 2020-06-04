@@ -42,17 +42,37 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
-                android:id="@+id/btnAddImageAddSighting"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:src="@drawable/ic_add_image_24"
-                android:tint="@color/black"
+                android:background="@drawable/bg_scrim_image"
+                android:gravity="end"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="@id/imageAddSighting"
-                app:layout_constraintEnd_toEndOf="@id/imageAddSighting" />
+                app:layout_constraintEnd_toEndOf="@id/imageAddSighting"
+                app:layout_constraintStart_toStartOf="@id/imageAddSighting">
+
+                <ImageButton
+                    android:id="@+id/btnPickImageAddSighting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_add_gallery_24"
+                    android:tint="@color/black" />
+
+                <ImageButton
+                    android:id="@+id/btnAddImageAddSighting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_add_image_24"
+                    android:tint="@color/black" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textLocationAddSighting"

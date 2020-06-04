@@ -26,6 +26,10 @@ public class Bird {
         return imagePath;
     }
 
+    public String getUriPath() {
+        return imagePath.startsWith("content://") ? imagePath : "file://" + imagePath;
+    }
+
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }

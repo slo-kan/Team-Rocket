@@ -75,6 +75,14 @@ public class Utils {
         return manager != null && manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
+    public static boolean isPermissionGranted(Context context, String permission) {
+        return PermissionChecker.checkSelfPermission(context, permission) == PERMISSION_GRANTED;
+    }
+
+    public static void requestPermission(Activity activity, String permission, int requestCode) {
+        ActivityCompat.requestPermissions(activity, new String[]{permission}, requestCode);
+    }
+
     public static void showInfoDialog(Context context, int titleId, int messageId) {
         new AlertDialog.Builder(context)
                 .setTitle(titleId)
