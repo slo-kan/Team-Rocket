@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -46,6 +47,8 @@ public class HomeFragment extends Fragment {
 
     public static final String TAG = "homeFragment";
 
+    private static final int RC_LOCATION = 243;
+
     private FusedLocationProviderClient locationProvider;
     private LocationCallback locationCallback;
     private Location lastLocation = null;
@@ -59,6 +62,7 @@ public class HomeFragment extends Fragment {
     private HomeAdapter adapter;
 
     private View emptyView;
+    private TextView emptyText;
     private View filterView;
 
     @Nullable
@@ -102,6 +106,8 @@ public class HomeFragment extends Fragment {
         });
 
         emptyView = view.findViewById(R.id.viewNoSightings);
+        emptyText = emptyView.findViewById(R.id.textEmpty);
+
         filterView = View.inflate(requireContext(), R.layout.home_dialog_filter, null);
         ChipGroup cgCategories = filterView.findViewById(R.id.cgCategories);
 
@@ -131,6 +137,19 @@ public class HomeFragment extends Fragment {
         List<BirdSighting> sightings = dao.getAll();
         adapter.update(sightings);
         if (sightings.isEmpty()) emptyView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (Utils.isLocationPermissionGranted(grantResults)) {
+            boolean shouldShowLocationFilters = Utils.isGpsEnabled(requireContext());
+
+            View locationWarning = filterView.findViewById(R.id.dialog_filter_location_warning);
+            locationWarning.setVisibility(shouldShowLocationFilters ? View.GONE : View.VISIBLE);
+
+            ChipGroup cgLocation = filterView.findViewById(R.id.cgLocation);
+            for (Chip chip : getChips(cgLocation)) chip.setEnabled(shouldShowLocationFilters);
+        }
     }
 
     @Override
@@ -179,6 +198,10 @@ public class HomeFragment extends Fragment {
         View locationWarning = filterView.findViewById(R.id.dialog_filter_location_warning);
         locationWarning.setVisibility(shouldShowLocationFilters ? View.GONE : View.VISIBLE);
 
+        if (!Utils.isLocationPermissionGranted(requireContext())) {
+            Utils.requestLocationPermission(this, RC_LOCATION);
+        }
+
         List<Chip> chips = getChips(cgCategories);
         List<Boolean> selectedCategories = chips
                 .stream()
@@ -192,9 +215,16 @@ public class HomeFragment extends Fragment {
                 .setView(filterView)
                 .setTitle("Filter sightings")
                 .setNeutralButton(R.string.home_title_reset_filters, (d, w) -> {
-
+                    emptyText.setText(R.string.home_msg_no_sightings);
+                    cgDate.check(View.NO_ID);
+                    cgLocation.check(View.NO_ID);
+                    for (int i = 0; i < chips.size(); i++) chips.get(i).setChecked(false);
+                    filter();
                 })
-                .setPositiveButton(android.R.string.ok, (d, w) -> filter())
+                .setPositiveButton(android.R.string.ok, (d, w) -> {
+                    emptyText.setText(R.string.home_msg_no_filters);
+                    filter();
+                })
                 .setNegativeButton(android.R.string.cancel, (d, w) -> {
                     cgDate.check(selectedDateChip);
                     cgLocation.check(selectedLocationChip);
@@ -231,6 +261,16 @@ public class HomeFragment extends Fragment {
         int locationFilter = cgLocation.getCheckedChipId();
 
         String query = getFilterQuery(selectedCategories, dateFilter, locationFilter);
+
+        List<BirdSighting> filteredSightings = dao.filter(new SimpleSQLiteQuery(query));
+        adapter.update(filteredSightings);
+
+        if (selectedCategories.isEmpty() && dateFilter == -1 && locationFilter == -1) {
+            emptyText.setText(R.string.home_msg_no_sightings);
+        }
+
+        if (filteredSightings.isEmpty()) emptyView.setVisibility(View.VISIBLE);
+        else emptyView.setVisibility(View.GONE);
     }
 
     private String getFilterQuery(List<String> categories, int dateFilter, int locationFilter) {
@@ -241,23 +281,29 @@ public class HomeFragment extends Fragment {
         }
 
         if (categories != null && !categories.isEmpty()) {
-            query += "category in ";
-            query += categories.stream().collect(Collectors.joining(", ", "(", ") "));
+            query += "family in ";
+            query += categories.stream().map(st -> "'" + st + "'").collect(Collectors.joining(", ", "(", ") "));
         }
 
         if (dateFilter != -1) {
+            if (!query.trim().endsWith("WHERE")) {
+                query += " AND ";
+            }
+
             long timeDiff = dateFilter == R.id.filter_chip_day ? TimeUnit.HOURS.toMillis(24)
                     : dateFilter == R.id.filter_chip_week ? TimeUnit.DAYS.toMillis(7)
                     : TimeUnit.DAYS.toMillis(30);
             long currentTime = System.currentTimeMillis();
 
-            long from = currentTime - timeDiff / 2;
-            long to = currentTime + timeDiff / 2;
-
-            query += "AND date > " + from + " AND date < " + to;
+            long from = currentTime - timeDiff;
+            query += " time > " + from + " AND time < " + currentTime;
         }
 
         if (locationFilter != -1 && lastLocation != null) {
+            if (!query.trim().endsWith("WHERE")) {
+                query += " AND ";
+            }
+
             LatLng loc = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
             int distKm = locationFilter == R.id.filter_chip_1_km ? 1 : 10;
             double[] deviations = Utils.getCoordinateDeviations(loc, distKm);
@@ -274,8 +320,8 @@ public class HomeFragment extends Fragment {
             double lonMax = Math.max(lonA, lonB);
             double lonMin = Math.min(lonA, lonB);
 
-            query += " AND lat BETWEEN " + latMin + " AND " + latMax;
-            query += " AND lon BETWEEN " + lonMin + " AND " + lonMax;
+            query += " lat > " + latMin + " AND lat < " + latMax;
+            query += " AND lon > " + lonMin + " AND lon < " + lonMax;
         }
 
         return query;

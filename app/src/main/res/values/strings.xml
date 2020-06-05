@@ -10,6 +10,7 @@
 
     <string name="home_add_sighting">Add Sighting</string>
     <string name="home_msg_no_sightings">You haven\'t added any bird sightings. Add one by tapping the button below.</string>
+    <string name="home_msg_no_filters">No bird sightings match the given filter.</string>
     <string name="home_title_change_language">Change language</string>
     <string name="home_title_choose_categories">Choose categories</string>
     <string name="home_title_choose_date">Choose date</string>
