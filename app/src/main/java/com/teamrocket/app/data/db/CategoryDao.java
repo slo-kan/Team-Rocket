@@ -9,7 +9,9 @@ import androidx.room.Query;
 import com.teamrocket.app.model.Category;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Dao
 public abstract class CategoryDao {
@@ -17,7 +19,18 @@ public abstract class CategoryDao {
     private List<Listener> listeners = new ArrayList<>();
 
     @Query("SELECT * FROM category")
-    public abstract List<Category> getAll();
+    abstract List<Category> _getAll();
+
+    public List<Category> getAll(Context context) {
+        List<Category> defaults = Arrays.asList(Category.getDefaultCategories(context));
+
+        return _getAll().stream()
+                .peek(category -> {
+                    if (category.isDefault())
+                        category.setName(defaults.get(category.getId()).getName());
+                })
+                .collect(Collectors.toList());
+    }
 
     @Query("SELECT COUNT(id) FROM category WHERE isDefault = 1")
     abstract int getNumDefault();

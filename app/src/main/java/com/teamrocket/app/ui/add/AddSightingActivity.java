@@ -3,7 +3,10 @@ package com.teamrocket.app.ui.add;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.location.Location;
 import android.net.Uri;
@@ -51,8 +54,10 @@ import com.teamrocket.app.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -113,7 +118,7 @@ public class AddSightingActivity extends AppCompatActivity {
         dao.addListener(sighting -> finish());
 
         categoryDao = ((BTApplication) getApplication()).getCategoryDao();
-        categoryDao.populateDefaults(getApplicationContext());
+        categoryDao.populateDefaults(getBaseContext());
 
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
 
@@ -357,9 +362,24 @@ public class AddSightingActivity extends AppCompatActivity {
             return;
         }
 
+        List<String> localisedNames = Arrays.asList(getBaseContext().getResources().getStringArray(R.array.categories));
+
+        Configuration conf = getResources().getConfiguration();
+        conf = new Configuration(conf);
+        conf.setLocale(new Locale("en"));
+        Context localizedContext = createConfigurationContext(conf);
+        Resources res = localizedContext.getResources();
+
+        List<String> names = Arrays.asList(res.getStringArray(R.array.categories));
+
+        String localisedCategory = editFamily.getText().toString();
+        String category = localisedNames.contains(localisedCategory)
+                ? names.get(localisedNames.indexOf(localisedCategory))
+                : localisedCategory;
+
         Bird bird = new Bird();
         bird.setName(editName.getText().toString());
-        bird.setFamily(editFamily.getText().toString());
+        bird.setFamily(category);
         bird.setImagePath(imagePath);
         bird.setSize(Bird.SIZE_SMALL);
         bird.setColor("blue");
@@ -427,8 +447,14 @@ public class AddSightingActivity extends AppCompatActivity {
     }
 
     private void showSelectCategoryDialog() {
-        String[] categories = categoryDao.getAll()
+        List<Category> defaults = Arrays.asList(Category.getDefaultCategories(getBaseContext()));
+
+        String[] categories = categoryDao.getAll(getBaseContext())
                 .stream()
+                .peek(category -> {
+                    if (category.isDefault())
+                        category.setName(defaults.get(category.getId()).getName());
+                })
                 .map(Category::getName)
                 .toArray(size -> new String[categoryDao.getNumCategories()]);
 
