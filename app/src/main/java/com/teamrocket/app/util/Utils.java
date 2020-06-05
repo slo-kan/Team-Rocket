@@ -47,6 +47,23 @@ public class Utils {
         return new LatLng(y + location.latitude, x + location.longitude);
     }
 
+    /**
+     * Returns the bounds for the distance from a give location within a given distance.
+     *
+     * @param location The location from which the bounds are to be measured.
+     * @param distKm   The distance until which in all directions the bounds must be measured.
+     * @return a double array of size 2 containing the latitude and longitude deviations.
+     */
+    public static double[] getCoordinateDeviations(LatLng location, int distKm) {
+        // 1Lat = 111,111 mtrs
+        // 1000mtr = 1000/111,111 deg = 0.009000deg Lat
+
+        double kmLat = 1 / 111.111;
+        double kmLon = 1 / (111.111 * Math.cos(location.latitude * Math.PI / 180));
+
+        return new double[]{kmLat * distKm, kmLon * distKm};
+    }
+
     public static int toDp(float px, Context context) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) (px / ((float) metrics.densityDpi / DENSITY_DEFAULT));
