@@ -3,6 +3,8 @@ package com.teamrocket.app.data.db;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.RawQuery;
+import androidx.sqlite.db.SupportSQLiteQuery;
 
 import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
@@ -23,6 +25,9 @@ public abstract class BirdSightingDao {
 
     @Query("SELECT * FROM birdsighting WHERE name LIKE :name AND family LIKE :family")
     abstract List<BirdSighting> _findSimilar(String name, String family);
+
+    @RawQuery
+    public abstract List<BirdSighting> filter(SupportSQLiteQuery query);
 
     public List<BirdSighting> findSimilar(Bird bird) {
         return _findSimilar(bird.getName(), bird.getFamily());

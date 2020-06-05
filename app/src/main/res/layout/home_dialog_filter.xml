@@ -40,6 +40,7 @@
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filter_chip_day"
             style="@style/AppTheme.Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,12 +48,14 @@
 
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filter_chip_week"
             style="@style/AppTheme.Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home_title_past_week" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filter_chip_month"
             style="@style/AppTheme.Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,12 +81,14 @@
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filter_chip_1_km"
             style="@style/AppTheme.Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home_title_within_km" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filter_chip_10_km"
             style="@style/AppTheme.Chip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
