@@ -6,10 +6,20 @@
     <string name="main_nav_map">Map</string>
     <string name="main_nav_categories">Categories</string>
     <string name="main_nav_search">Search</string>
+    <string name="main_title_filter">Filter</string>
 
     <string name="home_add_sighting">Add Sighting</string>
     <string name="home_msg_no_sightings">You haven\'t added any bird sightings. Add one by tapping the button below.</string>
     <string name="home_title_change_language">Change language</string>
+    <string name="home_title_choose_categories">Choose categories</string>
+    <string name="home_title_choose_date">Choose date</string>
+    <string name="home_title_past_day">Past 24 hours</string>
+    <string name="home_title_past_week">Past week</string>
+    <string name="home_title_past_month">Past month</string>
+    <string name="home_title_choose_location">Choose location</string>
+    <string name="home_title_within_km">Within 1 KM</string>
+    <string name="home_title_within_10_km">Within 10 KM</string>
+    <string name="home_title_reset_filters">Reset all filters</string>
     <string name="title_add_sighting">Add Sighting</string>
 
     <string name="map_gps_dialog_title">GPS is turned off</string>
@@ -31,5 +41,6 @@
     <string name="add_sighting_category">Bird category</string>
     <string name="add_sighting_title_save">Save</string>
     <string name="add_sighting_msg_fill_details">Please fill all the details</string>
+    <string name="home_msg_filter_location">To use the location filters, please grant the location permission and have your GPS turned on.</string>
 
 </resources>

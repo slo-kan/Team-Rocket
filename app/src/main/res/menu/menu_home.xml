@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/main_menu_filter"
+        android:icon="@drawable/ic_filter_24"
+        android:title="@string/main_title_filter"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_change_language"
         android:title="@string/home_title_change_language"
-        app:showAsAction="never"></item>
+        app:showAsAction="never" />
 </menu>

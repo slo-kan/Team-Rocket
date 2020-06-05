@@ -12,23 +12,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Dao
 public abstract class CategoryDao {
 
     private List<Listener> listeners = new ArrayList<>();
 
-    @Query("SELECT * FROM category")
-    abstract List<Category> _getAll();
+    @Query("SELECT * FROM category WHERE isDefault = 0")
+    abstract List<Category> _getUserAddedCategories();
 
-    public List<Category> getAll(Context context) {
-        List<Category> defaults = Arrays.asList(Category.getDefaultCategories(context));
+    List<String> getUserAddedCategories() {
+        return _getUserAddedCategories().stream().map(Category::getName).collect(Collectors.toList());
+    }
 
-        return _getAll().stream()
-                .peek(category -> {
-                    if (category.isDefault())
-                        category.setName(defaults.get(category.getId()).getName());
-                })
+    public List<String> getAll(Context context) {
+        return Stream.concat(Category.getDefaultCategoryNames(context).stream(), getUserAddedCategories().stream())
                 .collect(Collectors.toList());
     }
 
@@ -65,7 +64,7 @@ public abstract class CategoryDao {
         }
     }
 
-    interface Listener {
+    public interface Listener {
         void onCategoryAdded(Category category);
     }
 }

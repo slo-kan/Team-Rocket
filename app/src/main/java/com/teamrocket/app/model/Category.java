@@ -7,6 +7,9 @@ import androidx.room.PrimaryKey;
 
 import com.teamrocket.app.R;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Entity
 public class Category {
 
@@ -42,6 +45,10 @@ public class Category {
             categories[i] = new Category(i, names[i], true);
         }
         return categories;
+    }
+
+    public static List<String> getDefaultCategoryNames(Context context) {
+        return Arrays.asList(context.getResources().getStringArray(R.array.categories));
     }
 
     public String getName() {

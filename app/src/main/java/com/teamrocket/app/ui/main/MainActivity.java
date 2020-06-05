@@ -111,13 +111,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_change_language) {
             showLanguageChangeDialog();
+        } else if (item.getItemId() == R.id.main_menu_filter) {
+            homeFragment.showFilterDialog();
         }
         return true;
     }
 
     private void showLanguageChangeDialog() {
         String[] languages = {"Default", "English", "German", "Spanish", "Hindi"};
-        List<String> langValues = Arrays.asList("", "en", "de", "es", "hi");
+        List<String> langValues = Arrays.asList("", "en-GB", "de", "es", "hi");
 
         String currentLang = PreferenceManager.getDefaultSharedPreferences(this).getString("lang", "");
 

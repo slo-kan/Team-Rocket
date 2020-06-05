@@ -447,16 +447,7 @@ public class AddSightingActivity extends AppCompatActivity {
     }
 
     private void showSelectCategoryDialog() {
-        List<Category> defaults = Arrays.asList(Category.getDefaultCategories(getBaseContext()));
-
-        String[] categories = categoryDao.getAll(getBaseContext())
-                .stream()
-                .peek(category -> {
-                    if (category.isDefault())
-                        category.setName(defaults.get(category.getId()).getName());
-                })
-                .map(Category::getName)
-                .toArray(size -> new String[categoryDao.getNumCategories()]);
+        String[] categories = categoryDao.getAll(getBaseContext()).toArray(new String[categoryDao.getNumCategories()]);
 
         new AlertDialog.Builder(AddSightingActivity.this)
                 .setTitle(R.string.add_sighting_title_select_category)

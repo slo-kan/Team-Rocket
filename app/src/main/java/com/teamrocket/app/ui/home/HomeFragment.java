@@ -5,29 +5,38 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
 import com.teamrocket.app.data.db.BirdSightingDao;
-import com.teamrocket.app.model.Bird;
+import com.teamrocket.app.data.db.CategoryDao;
 import com.teamrocket.app.model.BirdSighting;
 import com.teamrocket.app.ui.add.AddSightingActivity;
 import com.teamrocket.app.ui.main.MainActivity;
+import com.teamrocket.app.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.stream.Collectors;
 
 public class HomeFragment extends Fragment {
 
     public static final String TAG = "homeFragment";
+
+    private CategoryDao categoryDao;
+    private CategoryDao.Listener categoryListener;
 
     private BirdSightingDao dao;
     private BirdSightingDao.Listener listener;
@@ -35,6 +44,7 @@ public class HomeFragment extends Fragment {
     private HomeAdapter adapter;
 
     private View emptyView;
+    private View filterView;
 
     @Nullable
     @Override
@@ -43,9 +53,16 @@ public class HomeFragment extends Fragment {
             adapter.addSighting(sighting);
             emptyView.setVisibility(View.GONE);
         };
-
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         dao.addListener(listener);
+
+        categoryListener = category -> {
+            Chip chip = (Chip) View.inflate(requireContext(), R.layout.home_dialog_filter_chip, null);
+            chip.setText(category.getName());
+            ((ChipGroup) filterView.findViewById(R.id.cgCategories)).addView(chip);
+        };
+        categoryDao = ((BTApplication) getActivity().getApplication()).getCategoryDao();
+        categoryDao.addListener(categoryListener);
 
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
@@ -65,6 +82,14 @@ public class HomeFragment extends Fragment {
         });
 
         emptyView = view.findViewById(R.id.viewNoSightings);
+        filterView = View.inflate(requireContext(), R.layout.home_dialog_filter, null);
+        ChipGroup cgCategories = filterView.findViewById(R.id.cgCategories);
+
+        for (String category : categoryDao.getAll(requireActivity().getBaseContext())) {
+            Chip chip = (Chip) View.inflate(requireContext(), R.layout.home_dialog_filter_chip, null);
+            chip.setText(category);
+            cgCategories.addView(chip);
+        }
 
         ExtendedFloatingActionButton btnAddSighting = view.findViewById(R.id.btnAddSighting);
         btnAddSighting.setOnClickListener(v -> {
@@ -92,27 +117,59 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         dao.removeListener(listener);
+        categoryDao.removeListener(categoryListener);
     }
 
-    private void addBirdSighting() {
-        Bird bird = new Bird();
+    public void showFilterDialog() {
+        ViewGroup parent = (ViewGroup) filterView.getParent();
+        if (parent != null) parent.removeView(filterView);
 
-        Random random = new Random();
+        ChipGroup cgCategories = filterView.findViewById(R.id.cgCategories);
+        ChipGroup cgDate = filterView.findViewById(R.id.cgDate);
+        ChipGroup cgLocation = filterView.findViewById(R.id.cgLocation);
 
-        bird.setName("Bird #" + random.nextInt(1000));
-        bird.setImagePath("");
-        bird.setFamily("Family #" + random.nextInt(25));
-        bird.setColor("violet");
-        bird.setSize(random.nextInt(3));
+        boolean shouldShowLocationFilters = Utils.isLocationPermissionGranted(requireContext())
+                && Utils.isGpsEnabled(requireContext());
 
-        BirdSighting.Location location = new BirdSighting.Location(0, 0);
-        BirdSighting sighting = new BirdSighting(bird, location, System.currentTimeMillis());
+        //TODO: Solve for when chip is enabled and then gps is turned off
+        for (Chip chip : getChips(cgLocation)) chip.setEnabled(shouldShowLocationFilters);
+        View locationWarning = filterView.findViewById(R.id.dialog_filter_location_warning);
+        locationWarning.setVisibility(shouldShowLocationFilters ? View.GONE : View.VISIBLE);
 
-        long before = System.currentTimeMillis();
-        dao.insert(sighting);
-        long after = System.currentTimeMillis();
+        List<Chip> chips = getChips(cgCategories);
+        List<Boolean> selectedCategories = chips
+                .stream()
+                .map(CompoundButton::isChecked)
+                .collect(Collectors.toList());
 
-//        Toast.makeText(getContext(), "Saving a bird sighting took " + (after - before) + " ms", Toast.LENGTH_SHORT).show();
+        int selectedDateChip = cgDate.getCheckedChipId();
+        int selectedLocationChip = cgLocation.getCheckedChipId();
+
+        new AlertDialog.Builder(requireActivity())
+                .setView(filterView)
+                .setTitle("Filter sightings")
+                .setNeutralButton(R.string.home_title_reset_filters, (d, w) -> {
+
+                })
+                .setPositiveButton(android.R.string.ok, null)
+                .setNegativeButton(android.R.string.cancel, (d, w) -> {
+                    cgDate.check(selectedDateChip);
+                    cgLocation.check(selectedLocationChip);
+                    for (int i = 0; i < chips.size(); i++) chips.get(i).setChecked(selectedCategories.get(i));
+                })
+                .setOnCancelListener(dialog -> {
+                    cgDate.check(selectedDateChip);
+                    cgLocation.check(selectedLocationChip);
+                    for (int i = 0; i < chips.size(); i++) chips.get(i).setChecked(selectedCategories.get(i));
+                })
+                .show();
     }
 
+    private List<Chip> getChips(ChipGroup chipGroup) {
+        List<Chip> chips = new ArrayList<>();
+        for (int i = 0; i < chipGroup.getChildCount(); i++) {
+            chips.add((Chip) chipGroup.getChildAt(i));
+        }
+        return chips;
+    }
 }
