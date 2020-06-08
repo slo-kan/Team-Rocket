@@ -338,14 +338,17 @@ public class AddSightingActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
-        new DatePickerDialog(this, (dView, year, month, day) -> {
+        DatePickerDialog dateDialog = new DatePickerDialog(this, (dView, year, month, day) -> {
             new TimePickerDialog(this, (tView, hour, minute) -> {
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, day, hour, minute);
                 String dateTime = Utils.formatDate(cal.getTime().getTime());
                 editDateTime.setText(dateTime);
             }, calendar.get(HOUR_OF_DAY), calendar.get(MINUTE), true).show();
-        }, calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH)).show();
+        }, calendar.get(YEAR), calendar.get(MONTH), calendar.get(DAY_OF_MONTH));
+
+        dateDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+        dateDialog.show();
     }
 
     private boolean isFormValid() {
