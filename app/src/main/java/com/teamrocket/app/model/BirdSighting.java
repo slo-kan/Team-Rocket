@@ -18,11 +18,13 @@ public class BirdSighting {
     private Location location;
     private long time;
     private String userId;
+    private String notes;
 
-    public BirdSighting(Bird bird, Location location, long time) {
+    public BirdSighting(Bird bird, Location location, long time, String notes) {
         this.bird = bird;
         this.location = location;
         this.time = time;
+        this.notes = notes;
     }
 
     public Bird getBird() {
@@ -55,6 +57,14 @@ public class BirdSighting {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     @Override

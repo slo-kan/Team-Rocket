@@ -203,6 +203,27 @@
             android:textColor="?colorPrimary"
             android:textSize="13sp" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="@string/add_sighting_title_notes"
+            android:textColor="@color/gray_9"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/editNotesAddSighting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/gray_0"
+            android:gravity="top"
+            android:lines="5"
+            android:padding="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRandomise"

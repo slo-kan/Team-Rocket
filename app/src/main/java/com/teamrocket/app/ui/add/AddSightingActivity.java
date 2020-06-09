@@ -100,6 +100,7 @@ public class AddSightingActivity extends AppCompatActivity {
     private EditText editFamily;
     private EditText editLocation;
     private EditText editDateTime;
+    private EditText editNotes;
 
     private TextView btnMoreInfo;
 
@@ -129,6 +130,7 @@ public class AddSightingActivity extends AppCompatActivity {
         editFamily = findViewById(R.id.editFamilyAddSighting);
         editLocation = findViewById(R.id.editLocationAddSighting);
         editDateTime = findViewById(R.id.editDateTimeAddSighting);
+        editNotes = findViewById(R.id.editNotesAddSighting);
         btnMoreInfo = findViewById(R.id.btnMoreInfoAddSighting);
 
         if (!Utils.isLocationPermissionGranted(this)) {
@@ -395,9 +397,10 @@ public class AddSightingActivity extends AppCompatActivity {
         BirdSighting.Location location = new BirdSighting.Location(lat, lon);
 
         String dateString = editDateTime.getText().toString();
+        String notes = editNotes.getText().toString();
         long time = Utils.parseDate(dateString).getTime();
 
-        BirdSighting sighting = new BirdSighting(bird, location, time);
+        BirdSighting sighting = new BirdSighting(bird, location, time, notes);
 
         dao.insert(sighting);
     }

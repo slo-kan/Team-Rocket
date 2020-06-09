@@ -21,6 +21,7 @@
     <string name="home_title_within_km">Within 1 KM</string>
     <string name="home_title_within_10_km">Within 10 KM</string>
     <string name="home_title_reset_filters">Reset all filters</string>
+    <string name="home_msg_filter_location">To use the location filters, please grant the location permission and have your GPS turned on.</string>
     <string name="title_add_sighting">Add Sighting</string>
 
     <string name="map_gps_dialog_title">GPS is turned off</string>
@@ -42,6 +43,6 @@
     <string name="add_sighting_category">Bird category</string>
     <string name="add_sighting_title_save">Save</string>
     <string name="add_sighting_msg_fill_details">Please fill all the details</string>
-    <string name="home_msg_filter_location">To use the location filters, please grant the location permission and have your GPS turned on.</string>
+    <string name="add_sighting_title_notes">Notes</string>
 
 </resources>

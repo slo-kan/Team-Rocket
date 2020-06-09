@@ -18,7 +18,7 @@ public class BTApplication extends Application {
     public void onCreate() {
         super.onCreate();
         database = Room.databaseBuilder(this, Database.class, DB_NAME)
-                .addMigrations(Database.MIGRATION_1_2)
+                .addMigrations(Database.MIGRATION_1_2, Database.MIGRATION_2_3)
                 .allowMainThreadQueries()
                 .build();
     }
