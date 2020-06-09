@@ -29,6 +29,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -104,6 +105,7 @@ public class AddSightingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setLanguage();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         setSupportActionBar(findViewById(R.id.toolbarAddSighting));
@@ -493,4 +495,17 @@ public class AddSightingActivity extends AppCompatActivity {
                 .show();
 
     }
+
+    private void setLanguage() {
+        String language = PreferenceManager.getDefaultSharedPreferences(this).getString("lang", "");
+        Locale locale = language.isEmpty() ? Locale.getDefault() : new Locale(language);
+
+        Resources res = getBaseContext().getResources();
+        Configuration config = new Configuration(res.getConfiguration());
+        Locale.setDefault(locale);
+        config.setLocale(locale);
+
+        res.updateConfiguration(config, res.getDisplayMetrics());
+    }
+
 }
