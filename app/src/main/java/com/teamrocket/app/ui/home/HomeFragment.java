@@ -1,7 +1,10 @@
 package com.teamrocket.app.ui.home;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
@@ -39,7 +42,9 @@ import com.teamrocket.app.ui.main.MainActivity;
 import com.teamrocket.app.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -282,7 +287,10 @@ public class HomeFragment extends Fragment {
 
         if (categories != null && !categories.isEmpty()) {
             query += "family in ";
-            query += categories.stream().map(st -> "'" + st + "'").collect(Collectors.joining(", ", "(", ") "));
+            query += categories.stream()
+                    .map(this::getEnglishCategoryName)
+                    .map(st -> "'" + st + "'")
+                    .collect(Collectors.joining(", ", "(", ") "));
         }
 
         if (dateFilter != -1) {
@@ -325,5 +333,21 @@ public class HomeFragment extends Fragment {
         }
 
         return query;
+    }
+
+    private String getEnglishCategoryName(String localisedName) {
+        List<String> localisedNames = Arrays.asList(requireActivity().getBaseContext().getResources().getStringArray(R.array.categories));
+
+        Configuration conf = getResources().getConfiguration();
+        conf = new Configuration(conf);
+        conf.setLocale(new Locale("en"));
+        Context localizedContext = requireActivity().createConfigurationContext(conf);
+        Resources res = localizedContext.getResources();
+
+        List<String> names = Arrays.asList(res.getStringArray(R.array.categories));
+
+        return localisedNames.contains(localisedName)
+                ? names.get(localisedNames.indexOf(localisedName))
+                : localisedName;
     }
 }
