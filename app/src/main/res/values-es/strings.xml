@@ -6,11 +6,23 @@
     <string name="main_nav_map">Mapa</string>
     <string name="main_nav_categories">Categorias</string>
     <string name="main_nav_search">Buscar</string>
+    <string name="main_title_filter">Filtrar</string>
 
     <string name="home_add_sighting">Agregar avistamiento</string>
     <string name="home_msg_no_sightings">No ha agregado ningún avistamiento de aves. Agregue uno tocando el botón de abajo.</string>
     <string name="home_title_change_language">Cambiar idioma</string>
     <string name="title_add_sighting">Agregar avistamiento</string>
+    <string name="home_msg_no_filters">Ningún avistamiento de aves coincide con el filtro dado.</string>
+    <string name="home_title_choose_categories">Elige categorías</string>
+    <string name="home_title_choose_date">Elige fecha</string>
+    <string name="home_title_past_day">Últimas 24 horas</string>
+    <string name="home_title_past_week">Semana pasada</string>
+    <string name="home_title_past_month">El mes pasado</string>
+    <string name="home_title_choose_location">Elegir la ubicación</string>
+    <string name="home_title_within_km">Dentro de 1 KM</string>
+    <string name="home_title_within_10_km">Dentro de 10 KM</string>
+    <string name="home_title_reset_filters">Restablecer todos los filtros</string>
+    <string name="home_msg_filter_location">o use los filtros de ubicación, otorgue el permiso de ubicación y encienda su GPS.</string>
 
     <string name="map_gps_dialog_title">GPS esta apagado</string>
     <string name="map_gps_dialog_message">Todavía puede ver su historial de avistamiento de aves, pero su ubicación actual no se mostrará.</string>
@@ -33,4 +45,5 @@
     <string name="add_sighting_category">Categoría de aves</string>
     <string name="add_sighting_title_save">Salvar</string>
     <string name="add_sighting_msg_fill_details">Por favor complete todos los detalles</string>
+    <string name="add_sighting_title_notes">Notas</string>
 </resources>

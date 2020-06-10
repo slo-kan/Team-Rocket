@@ -6,11 +6,23 @@
     <string name="main_nav_map">नक्शा</string>
     <string name="main_nav_categories">श्रेणियाँ</string>
     <string name="main_nav_search">खोज</string>
+    <string name="main_title_filter">फ़िल्टर</string>
 
     <string name="home_add_sighting">साइटिंग जोड़ें</string>
     <string name="home_msg_no_sightings">आपने कोई पक्षी देखा नहीं है। एक नीचे दिए गए बटन दोहन से जोड़ें।</string>
     <string name="home_title_change_language">भाषा बदलो</string>
     <string name="title_add_sighting">साइटिंग जोड़ें</string>
+    <string name="home_msg_no_filters">कोई भी पक्षी देखे गए फिल्टर से मेल नहीं खाता है.</string>
+
+    <string name="home_title_choose_date">तिथि चुनें</string>
+    <string name="home_title_past_day">पिछले 24 घंटे</string>
+    <string name="home_title_past_week">पिछले सप्ताह</string>
+    <string name="home_title_past_month">पिछले महीने</string>
+    <string name="home_title_choose_location">स्थान का चयन</string>
+    <string name="home_title_within_km">1 KM के भीतर</string>
+    <string name="home_title_within_10_km">10 KM के भीतर</string>
+    <string name="home_title_reset_filters">सभी फ़िल्टर रीसेट करें</string>
+    <string name="home_msg_filter_location">स्थान फ़िल्टर का उपयोग करने के लिए, कृपया स्थान की अनुमति प्रदान करें और अपना GPS चालू करें.</string>
 
     <string name="map_gps_dialog_title">जीपीएस बंद है</string>
     <string name="map_gps_dialog_message">आप अभी भी अपने पक्षी के इतिहास को देख सकते हैं लेकिन आपका वर्तमान स्थान प्रदर्शित नहीं किया जाएगा।</string>
@@ -31,5 +43,6 @@
     <string name="add_sighting_category">पक्षी की श्रेणी</string>
     <string name="add_sighting_title_save">सहेजें</string>
     <string name="add_sighting_msg_fill_details">कृपया सभी विवरण भरें</string>
+    <string name="add_sighting_title_notes">टिप्पणियाँ</string>
 
 </resources>

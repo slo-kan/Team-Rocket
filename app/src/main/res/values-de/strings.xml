@@ -6,10 +6,22 @@
     <string name="main_nav_map"> Karte </string>
     <string name="main_nav_categories">Kategorien</string>
     <string name="main_nav_search"> Suche </string>
+    <string name="main_title_filter">Filter</string>
 
     <string name="home_add_sighting">Sichtung hinzufügen</string>
     <string name="home_msg_no_sightings">Sie haben keine Vogelbeobachtungen hinzugefügt. Fügen Sie eine hinzu, indem Sie auf die Schaltfläche unten tippen..</string>
     <string name="title_add_sighting">Sichtung hinzufügen</string>
+    <string name="home_msg_no_filters">Keine Vogelbeobachtung entspricht dem angegebenen Filter.</string>
+    <string name="home_title_choose_categories">Wählen Sie Kategorien</string>
+    <string name="home_title_choose_date">Datum auswählen</string>
+    <string name="home_title_past_day">Letzte 24 Stunden</string>
+    <string name="home_title_past_week">Letzte Woche</string>
+    <string name="home_title_past_month">Letzten Monat</string>
+    <string name="home_title_choose_location">Ort wählen</string>
+    <string name="home_title_within_km">Innerhalb von 1 km</string>
+    <string name="home_title_within_10_km">Innerhalb von 10 km</string>
+    <string name="home_title_reset_filters">Setzen Sie alle Filter zurück</string>
+    <string name="home_msg_filter_location">Um die Standortfilter zu verwenden, erteilen Sie bitte die Standortberechtigung und lassen Sie Ihr GPS einschalten.</string>
     <string name="home_title_change_language">Sprache ändern</string>
     <string name="map_gps_dialog_title"> GPS ist ausgeschaltet </string>
     <string name="map_gps_dialog_message">Sie können immer noch Ihren Vogelbeobachtungsverlauf sehen, aber Ihr aktueller Standort wird nicht angezeigt.</string>
@@ -31,4 +43,5 @@
     <string name="add_sighting_category">Vogelkategorie</string>
     <string name="add_sighting_title_save">Speichern</string>
     <string name="add_sighting_msg_fill_details">Bitte füllen Sie alle Details aus</string>
+    <string name="add_sighting_title_notes">Anmerkungen</string>
 </resources>
