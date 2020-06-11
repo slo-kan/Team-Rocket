@@ -9,14 +9,13 @@
 
 ### Vasudev.
 
-*  Has added a filter dialouge to app screen.
+*  Added a filter dialouge to app screen.
 *  Added function to find deviation of co-ordinates with in a given distance.
 *  Worked on creating a query from given filter options.
 *  Implemented show filtered feature on home list.
 *  Added filter accounting for translated category names.
 
 ### Sreepradh.
-
 
 *  Worked on Dynamically chaning app language.
 *  Has added notes field to add sighting screen.
@@ -29,4 +28,9 @@
 
 ## Progress next week.
 
+*  Integrate wikipedia api and show bird description on the map screen.
+*  Start working on the presentation for the next milestone and the blog.
+
 ## Meeting agenda.
+
+*  Discuss about required things for the next milestone.
