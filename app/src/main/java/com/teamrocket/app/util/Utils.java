@@ -3,6 +3,10 @@ package com.teamrocket.app.util;
 import android.app.Activity;
 import android.content.Context;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -18,6 +22,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.Context.CONNECTIVITY_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.PermissionChecker.PERMISSION_GRANTED;
 
@@ -27,6 +32,13 @@ public class Utils {
 
     static {
         simpleDateFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault());
+    }
+
+    public static boolean isOnline(Context context) {
+        ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo info = conManager.getActiveNetworkInfo();
+
+        return info != null && info.isConnected();
     }
 
     public static LatLng getRandomLocation(LatLng location, int radiusMtrs) {
@@ -107,6 +119,15 @@ public class Utils {
                 .setMessage(messageId)
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static String formatDate(long timestamp) {

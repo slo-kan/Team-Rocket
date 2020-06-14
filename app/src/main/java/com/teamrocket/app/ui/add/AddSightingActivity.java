@@ -47,9 +47,11 @@ import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
 import com.teamrocket.app.data.db.BirdSightingDao;
 import com.teamrocket.app.data.db.CategoryDao;
+import com.teamrocket.app.data.network.IWikiApi;
 import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
 import com.teamrocket.app.model.Category;
+import com.teamrocket.app.model.WikiResponse;
 import com.teamrocket.app.util.TextChangedListener;
 import com.teamrocket.app.util.Utils;
 
@@ -60,6 +62,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -82,6 +90,8 @@ public class AddSightingActivity extends AppCompatActivity {
 
     private BirdSightingDao dao;
     private CategoryDao categoryDao;
+
+    private IWikiApi wikiApi;
 
     private FusedLocationProviderClient locationProvider;
     private LocationCallback locationCallback;
@@ -119,6 +129,12 @@ public class AddSightingActivity extends AppCompatActivity {
 
         dao = ((BTApplication) getApplication()).getBirdSightingDao();
         dao.addListener(sighting -> finish());
+
+        wikiApi = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(IWikiApi.BASE_URL)
+                .build()
+                .create(IWikiApi.class);
 
         categoryDao = ((BTApplication) getApplication()).getCategoryDao();
         categoryDao.populateDefaults(getBaseContext());
@@ -173,12 +189,7 @@ public class AddSightingActivity extends AppCompatActivity {
         editDateTime.setText(Utils.formatDate(System.currentTimeMillis()));
 
         btnMoreInfo.setEnabled(false);
-        btnMoreInfo.setOnClickListener(v -> {
-            String url = String.format(URL_WIKIPEDIA, editName.getText().toString());
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-            browserIntent.setData(Uri.parse(url));
-            startActivity(browserIntent);
-        });
+        btnMoreInfo.setOnClickListener(v -> onMoreInfoClicked());
 
         editName.addTextChangedListener(new TextChangedListener(count -> {
             btnMoreInfo.setEnabled(count > 0);
@@ -285,6 +296,58 @@ public class AddSightingActivity extends AppCompatActivity {
         if (locationCallback != null) {
             locationProvider.removeLocationUpdates(locationCallback);
         }
+    }
+
+    private void onMoreInfoClicked() {
+        if (!Utils.isOnline(AddSightingActivity.this)) {
+            Toast.makeText(getBaseContext(), R.string.add_sighting_msg_offline, LENGTH_SHORT).show();
+            return;
+        }
+
+        Utils.hideKeyboard(AddSightingActivity.this);
+
+        View infoView = View.inflate(this, R.layout.dialog_info, null);
+        infoView.findViewById(R.id.progress_dialog_info).setVisibility(View.VISIBLE);
+        infoView.findViewById(R.id.content_dialog_info).setVisibility(View.GONE);
+
+        infoView.findViewById(R.id.btn_wikipedia_dialog_info).setOnClickListener(v -> {
+            String url = String.format(URL_WIKIPEDIA, editName.getText().toString());
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(url));
+            startActivity(browserIntent);
+        });
+
+        AlertDialog infoDialog = new AlertDialog.Builder(AddSightingActivity.this)
+                .setTitle(editName.getText().toString())
+                .setView(infoView)
+                .setPositiveButton(android.R.string.ok, null)
+                .create();
+
+        infoDialog.show();
+
+        wikiApi.getBirdInformation(editName.getText().toString()).enqueue(new Callback<WikiResponse>() {
+            @Override
+            public void onResponse(Call<WikiResponse> call, Response<WikiResponse> response) {
+                WikiResponse info = response.body();
+                if (info == null) {
+                    Toast.makeText(getBaseContext(), R.string.add_sighting_error_wiki, LENGTH_SHORT).show();
+                    if (infoDialog.isShowing()) infoDialog.dismiss();
+                    return;
+                }
+
+                if (infoDialog.isShowing()) {
+                    ((TextView) infoView.findViewById(R.id.text_dialog_info)).setText(info.getDescription());
+                    infoView.findViewById(R.id.progress_dialog_info).setVisibility(View.GONE);
+                    infoView.findViewById(R.id.content_dialog_info).setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WikiResponse> call, Throwable t) {
+                Toast.makeText(getBaseContext(), R.string.add_sighting_error_wiki, LENGTH_SHORT).show();
+                if (infoDialog.isShowing()) infoDialog.dismiss();
+            }
+        });
     }
 
     private void showLocationPickerDialog() {
