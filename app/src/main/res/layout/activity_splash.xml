@@ -8,7 +8,7 @@
     <View
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:background="@color/purple_5"
+        android:background="@color/blue_5"
         android:padding="16dp" />
 
     <TextView

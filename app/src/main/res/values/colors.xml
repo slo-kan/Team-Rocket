@@ -9,9 +9,9 @@
     <color name="gray_4">#ced4da</color>
     <color name="gray_t_2">#99e9ecef</color>
 
-    <color name="purple_5">#cc5de8</color>
-    <color name="purple_6">#be4bdb</color>
-    <color name="purple_7">#ae3ec9</color>
-    <color name="purple_8">#9c36b5</color>
-    <color name="purple_9">#862e9c</color>
+    <color name="blue_5">#339af0</color>
+    <color name="blue_6">#228be6</color>
+    <color name="blue_7">#1c7ed6</color>
+    <color name="blue_8">#1971c2</color>
+    <color name="blue_9">#1864ab</color>
 </resources>
