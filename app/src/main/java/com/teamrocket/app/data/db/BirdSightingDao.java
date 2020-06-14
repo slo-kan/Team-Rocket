@@ -21,10 +21,13 @@ public abstract class BirdSightingDao {
     public abstract List<BirdSighting> getAll();
 
     @Insert
-    abstract void _insert(BirdSighting sighting);
+    abstract long _insert(BirdSighting sighting);
 
     @Query("SELECT * FROM birdsighting WHERE name LIKE :name AND family LIKE :family")
     abstract List<BirdSighting> _findSimilar(String name, String family);
+
+    @Query("SELECT * FROM birdsighting WHERE sightingId = :sightingId LIMIT 1")
+     public abstract BirdSighting getSighting(long sightingId);
 
     @RawQuery
     public abstract List<BirdSighting> filter(SupportSQLiteQuery query);
@@ -34,7 +37,7 @@ public abstract class BirdSightingDao {
     }
 
     public void insert(BirdSighting sighting) {
-        _insert(sighting);
+        sighting.sightingId = _insert(sighting);
         for (Listener listener : listeners) {
             listener.onAdded(sighting);
         }

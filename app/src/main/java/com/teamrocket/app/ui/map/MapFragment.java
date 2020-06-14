@@ -1,17 +1,21 @@
 package com.teamrocket.app.ui.map;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -19,8 +23,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -30,19 +32,28 @@ import com.squareup.picasso.Picasso;
 import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
 import com.teamrocket.app.data.db.BirdSightingDao;
+import com.teamrocket.app.data.network.IWikiApi;
 import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
+import com.teamrocket.app.model.WikiResponse;
 import com.teamrocket.app.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static androidx.core.content.ContextCompat.getDrawable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class MapFragment extends Fragment {
 
     public static final String TAG = "mapFragment";
     private static final int RC_LOCATION = 432;
+    private static final String URL_WIKIPEDIA = "https://wikipedia.org/wiki/%s";
 
     private LatLng lastLocation;
     private FusedLocationProviderClient locationProvider;
@@ -60,6 +71,11 @@ public class MapFragment extends Fragment {
 
     private BirdSightingDao dao;
     private BirdSightingDao.Listener listener;
+
+    private IWikiApi wikiApi;
+    private View dialogView;
+    private View dialogContent;
+    private ProgressBar dialogProgress;
 
     @Nullable
     @Override
@@ -106,9 +122,26 @@ public class MapFragment extends Fragment {
                 updateMapZoom();
             }
 
+            map.setOnMarkerClickListener(marker -> {
+                long sightingId = (long) marker.getTag();
+                BirdSighting sighting = dao.getSighting(sightingId);
+                showSightingInfo(sighting);
+                return true;
+            });
+
             showMapMarkers();
             getLocationAndZoom();
         });
+
+        wikiApi = new Retrofit.Builder()
+                .baseUrl(IWikiApi.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(IWikiApi.class);
+
+        dialogView = View.inflate(requireContext(), R.layout.map_dialog_info, null);
+        dialogContent = dialogView.findViewById(R.id.map_dialog_content);
+        dialogProgress = dialogView.findViewById(R.id.progress_dialog_info);
     }
 
     private void showMapMarkers() {
@@ -117,6 +150,7 @@ public class MapFragment extends Fragment {
         map.clear();
         for (int i = 0; i < markers.size(); i++) {
             Marker m = map.addMarker(markers.get(i));
+            m.setTag(sightings.get(i).sightingId);
             getMarkerIcon(m, sightings.get(i));
         }
         updateMapZoom();
@@ -129,6 +163,70 @@ public class MapFragment extends Fragment {
         if (requestCode == RC_LOCATION && Utils.isLocationPermissionGranted(grantResults)) {
             getLocationAndZoom();
         }
+    }
+
+    private void showSightingInfo(BirdSighting sighting) {
+        ViewGroup parent = (ViewGroup) dialogView.getParent();
+        if (parent != null) {
+            parent.removeView(dialogView);
+        }
+
+        ImageView image = dialogView.findViewById(R.id.map_dialog_image);
+        TextView textName = dialogView.findViewById(R.id.map_dialog_name);
+        TextView textFamily = dialogView.findViewById(R.id.map_dialog_family);
+        TextView textDate = dialogView.findViewById(R.id.map_dialog_time);
+        TextView textNotes = dialogView.findViewById(R.id.map_dialog_notes);
+
+        View contentNotes = dialogView.findViewById(R.id.map_dialog_content_notes);
+
+        dialogView.findViewById(R.id.map_dialog_read_on_wikipedia).setOnClickListener(v -> {
+            String url = String.format(URL_WIKIPEDIA, sighting.getBird().getName());
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(url));
+            startActivity(browserIntent);
+        });
+
+        dialogProgress.setVisibility(View.VISIBLE);
+        dialogContent.setVisibility(View.GONE);
+        contentNotes.setVisibility(sighting.getNotes().isEmpty() ? View.GONE : View.VISIBLE);
+
+        Picasso.get().load(sighting.getBird().getUriPath()).fit().centerCrop().into(image);
+        textName.setText(sighting.getBird().getName());
+        textFamily.setText(sighting.getBird().getFamily());
+        textDate.setText(Utils.formatDate(sighting.getTime()));
+        textNotes.setText(sighting.getNotes());
+
+        AlertDialog infoDialog = new AlertDialog.Builder(requireActivity())
+                .setView(dialogView)
+                .setPositiveButton(android.R.string.ok, null)
+                .create();
+
+        infoDialog.show();
+
+        wikiApi.getBirdInformation(sighting.getBird().getName()).enqueue(new Callback<WikiResponse>() {
+            @Override
+            public void onResponse(Call<WikiResponse> call, Response<WikiResponse> response) {
+                WikiResponse info = response.body();
+                if (info == null) {
+                    Toast.makeText(getContext(), R.string.add_sighting_error_wiki, LENGTH_SHORT).show();
+                    dialogContent.setVisibility(View.GONE);
+                    dialogProgress.setVisibility(View.GONE);
+                    return;
+                }
+
+                if (infoDialog.isShowing()) {
+                    ((TextView) dialogView.findViewById(R.id.map_dialog_description)).setText(info.getDescription());
+                    dialogProgress.setVisibility(View.GONE);
+                    dialogContent.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WikiResponse> call, Throwable t) {
+                dialogContent.setVisibility(View.GONE);
+                dialogProgress.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void updateMapZoom() {
@@ -203,9 +301,12 @@ public class MapFragment extends Fragment {
     private void getMarkerIcon(Marker marker, BirdSighting birdSighting) {
         int iconSize = Utils.toPx(40, requireContext());
 
-        Picasso.get().load(birdSighting.getBird().getUriPath())
+        Picasso picasso = Picasso.get();
+        picasso.setLoggingEnabled(true);
+        picasso.load(birdSighting.getBird().getUriPath())
                 .resize(iconSize, iconSize)
                 .centerCrop()
+                //TODO: ImageMarker is being garbage collected. Store a reference.
                 .into(new ImageMarker(requireContext(), marker));
     }
 }
