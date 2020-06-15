@@ -109,8 +109,6 @@ public class MapFragment extends Fragment {
 
         if (!Utils.isLocationPermissionGranted(getContext())) {
             Utils.requestLocationPermission(this, RC_LOCATION);
-        } else if (!Utils.isGpsEnabled(requireContext())) {
-            Utils.showInfoDialog(requireContext(), R.string.map_gps_dialog_title, R.string.map_gps_dialog_message);
         }
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
