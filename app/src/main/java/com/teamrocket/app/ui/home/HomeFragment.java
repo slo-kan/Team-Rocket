@@ -218,7 +218,7 @@ public class HomeFragment extends Fragment {
 
         new AlertDialog.Builder(requireActivity())
                 .setView(filterView)
-                .setTitle("Filter sightings")
+                .setTitle(R.string.home_title_filter_sightings)
                 .setNeutralButton(R.string.home_title_reset_filters, (d, w) -> {
                     emptyText.setText(R.string.home_msg_no_sightings);
                     cgDate.check(View.NO_ID);
