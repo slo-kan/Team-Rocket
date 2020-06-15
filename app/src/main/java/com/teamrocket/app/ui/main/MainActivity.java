@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         boolean containsFragment = getSupportFragmentManager().getFragments().contains(fragment);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.scale_up_fade_in, R.anim.fade_out,
+                R.anim.scale_up_fade_in, R.anim.fade_out);
 
         if (currentFragment == null)
             ft.add(R.id.mainContent, fragment, fragment.getClass().getName());
