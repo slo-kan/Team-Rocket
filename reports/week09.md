@@ -9,17 +9,24 @@
 
 ### Vasudev.
 
-*  Show more information in the app itself instead of redirecting to browser.
+*  Added Show more information feature in the app itself instead of redirecting to browser.
 *  Built a bird information dialog when clicking on a map marker.
+*  Implemented Animate between fragments feature according to user input.
+*  Removed search tab from the bottom navigation.
 
 ### Sreepradh.
 
 *  Added splash screen to the app.
 *  Worked on changing app colour for better visibility.
+*  Added app icon in the splash screen.
 
 ### Rahul.
 
+*  Added a re-center button on the map screen to automatically adjust zoom levels.
+
 ### Lokesh.
+
+*  Added app icon to be shown in the app drawer.
 
 ## Progress next week.
 
