@@ -58,6 +58,7 @@ public class MapFragment extends Fragment {
     private LatLng lastLocation;
     private FusedLocationProviderClient locationProvider;
     private GoogleMap map;
+    private View iconRecenter;
 
     private List<BirdSighting> sightings = new ArrayList<>();
     private List<MarkerOptions> markers = new ArrayList<>();
@@ -111,6 +112,11 @@ public class MapFragment extends Fragment {
             Utils.requestLocationPermission(this, RC_LOCATION);
         }
 
+        iconRecenter = view.findViewById(R.id.iconRecenter);
+        iconRecenter.setOnClickListener(v -> {
+            updateMapZoom();
+        });
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(map -> {
             this.map = map;
@@ -125,6 +131,12 @@ public class MapFragment extends Fragment {
                 BirdSighting sighting = dao.getSighting(sightingId);
                 showSightingInfo(sighting);
                 return true;
+            });
+
+            map.setOnCameraMoveStartedListener(reason -> {
+                if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+                    iconRecenter.setVisibility(View.VISIBLE);
+                }
             });
 
             showMapMarkers();
@@ -243,6 +255,7 @@ public class MapFragment extends Fragment {
 
         int padding = Utils.toDp(196, requireContext());
         map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+        iconRecenter.setVisibility(View.GONE);
     }
 
     @SuppressLint("MissingPermission")
