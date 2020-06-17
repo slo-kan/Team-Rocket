@@ -11,7 +11,7 @@ import com.teamrocket.app.ui.main.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static int SPLASH_TIME_OUT = 700;
+    public static int SPLASH_TIME_OUT = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
