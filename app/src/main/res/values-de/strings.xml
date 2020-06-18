@@ -44,4 +44,8 @@
     <string name="add_sighting_title_save">Speichern</string>
     <string name="add_sighting_msg_fill_details">Bitte füllen Sie alle Details aus</string>
     <string name="add_sighting_title_notes">Anmerkungen</string>
+    <string name="add_sighting_msg_offline">Netzwerkverbindung ist nicht verfügbar</string>
+    <string name="add_sighting_error_wiki">Beim Versuch, Vogelinformationen abzurufen, ist ein Fehler aufgetreten</string>
+    <string name="add_sighting_read_on_wikipedia">Lesen Sie auf Wikipedia</string>
+    <string name="home_title_filter_sightings">Sichtungen filtern</string>
 </resources>

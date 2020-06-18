@@ -14,7 +14,7 @@
     <string name="title_add_sighting">साइटिंग जोड़ें</string>
     <string name="home_msg_no_filters">कोई भी पक्षी देखे गए फिल्टर से मेल नहीं खाता है.</string>
 
-    <string name="home_title_choose_date">तिथि चुनें</string>
+    <string name="home_title_choose_date">श्रेणियां चुनें</string>
     <string name="home_title_past_day">पिछले 24 घंटे</string>
     <string name="home_title_past_week">पिछले सप्ताह</string>
     <string name="home_title_past_month">पिछले महीने</string>
@@ -44,5 +44,10 @@
     <string name="add_sighting_title_save">सहेजें</string>
     <string name="add_sighting_msg_fill_details">कृपया सभी विवरण भरें</string>
     <string name="add_sighting_title_notes">टिप्पणियाँ</string>
+    <string name="add_sighting_msg_offline">नेटवर्क कनेक्शन उपलब्ध नहीं है</string>
+    <string name="add_sighting_error_wiki">पक्षी जानकारी प्राप्त करने की कोशिश में एक त्रुटि हुई</string>
+    <string name="add_sighting_read_on_wikipedia">विकिपीडिया पर पढ़ें</string>
+    <string name="home_title_filter_sightings">फ़िल्टर दृष्टि</string>
+    <string name="home_title_choose_categories">श्रेणियां चुनें</string>
 
 </resources>

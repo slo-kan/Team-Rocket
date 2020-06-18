@@ -46,4 +46,8 @@
     <string name="add_sighting_title_save">Salvar</string>
     <string name="add_sighting_msg_fill_details">Por favor complete todos los detalles</string>
     <string name="add_sighting_title_notes">Notas</string>
+    <string name="add_sighting_msg_offline">La conexión de red no está disponible</string>
+    <string name="add_sighting_error_wiki">Se produjo un error al intentar obtener información sobre las aves.</string>
+    <string name="add_sighting_read_on_wikipedia">Leer en Wikipedia</string>
+    <string name="home_title_filter_sightings">Filtrar avistamientos</string>
 </resources>
