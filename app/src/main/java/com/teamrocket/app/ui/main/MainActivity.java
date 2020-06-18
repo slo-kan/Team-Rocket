@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showLanguageChangeDialog() {
-        String[] languages = {"Default", "English", "German", "Spanish", "Hindi"};
+        String[] languages = {"Default", "English", "Deutsch", "Español ", "हिन्दी"};
         List<String> langValues = Arrays.asList("", "en-GB", "de", "es", "hi");
 
         String currentLang = PreferenceManager.getDefaultSharedPreferences(this).getString("lang", "");
