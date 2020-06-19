@@ -244,7 +244,7 @@ public class MapFragment extends Fragment {
         if (lastLocation == null && markers.isEmpty()) return;
 
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-        if (lastLocation != null) {
+        if (lastLocation != null && currentFilteredBird == null) {
             boundsBuilder.include(lastLocation);
         }
 
@@ -253,7 +253,7 @@ public class MapFragment extends Fragment {
         }
         LatLngBounds bounds = boundsBuilder.build();
 
-        int padding = Utils.toDp(196, requireContext());
+        int padding = Utils.toPx(32, requireContext());
         map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
         iconRecenter.setVisibility(View.GONE);
     }

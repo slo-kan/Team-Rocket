@@ -16,6 +16,8 @@
             android:id="@+id/text_dialog_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:maxLines="5"
+            android:ellipsize="end"
             android:lineSpacingExtra="4dp"
             android:padding="16dp"
             tools:text="Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet." />
