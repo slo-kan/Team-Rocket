@@ -62,6 +62,7 @@ public class MapFragment extends Fragment {
 
     private List<BirdSighting> sightings = new ArrayList<>();
     private List<MarkerOptions> markers = new ArrayList<>();
+    private List<ImageMarker> markerImages = new ArrayList<>();
 
     //This variable is used to check whether filters can be reset when the user clicks 'Map'
     //from the bottom navigation bar. Since we are delegating list item clicks and bottom nav bar
@@ -297,6 +298,7 @@ public class MapFragment extends Fragment {
                 ? dao.getAll() : dao.findSimilar(filterBird);
 
         this.markers.clear();
+        this.markerImages.clear();
         for (BirdSighting sighting : sightings) {
             BirdSighting.Location sLocation = sighting.getLocation();
             LatLng location = new LatLng(sLocation.getLat(), sLocation.getLon());
@@ -312,12 +314,14 @@ public class MapFragment extends Fragment {
     private void getMarkerIcon(Marker marker, BirdSighting birdSighting) {
         int iconSize = Utils.toPx(40, requireContext());
 
+        ImageMarker imageMarker = new ImageMarker(requireContext(), marker);
+        this.markerImages.add(imageMarker);
+
         Picasso picasso = Picasso.get();
         picasso.setLoggingEnabled(true);
         picasso.load(birdSighting.getBird().getUriPath())
                 .resize(iconSize, iconSize)
                 .centerCrop()
-                //TODO: ImageMarker is being garbage collected. Store a reference.
-                .into(new ImageMarker(requireContext(), marker));
+                .into(imageMarker);
     }
 }
