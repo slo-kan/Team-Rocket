@@ -2,17 +2,32 @@
 
 This repository holds the source code for the *Bird Tracking* app developed as part of the course project for Introduction to Software Engineering for Engineers course at OVGU.
 
+## Basic Prototype
+
 Currently, all the essential features have been implemented.
 
 ### Essential features
+
 - [x] User can add a bird sighting with name, category, photo, location, and date and time.
 - [x] For a sighting, show all similar appearances as markers on the map.
 - [x] User can add their own categories when adding a bird sighting.
 - [x] While adding a bird sighting, show a link to more information from Wikipedia.
 
+## Advanced Prototype
+
+### Essential
+
+- [x] User can filter sightings by date, category, and location.
+- [x] Add description field to show bird information on the map screen.
+- [x] Add notes field while adding a bird sighting.
+- [x] Add multiple language translations for the app.
+
+### Necessary
+- [x] Link to more information in the app itself.
+
 More implemented features of the app are listed in the [User Stories](../wikis/User-Stories) wiki page.
 
-### [Download APK file](https://code.ovgu.de/steup/rocket/-/raw/dev/app/release/app-release-vM1.apk)
+### [Download APK file](https://code.ovgu.de/steup/rocket/-/raw/dev/app/release/app-release-vM3.apk)
 
 ## Project structure
 
