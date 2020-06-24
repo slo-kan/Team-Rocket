@@ -1,4 +1,4 @@
-# Team Rocket Weekly Report - Week 7 - 23.06.2020
+# Team Rocket Weekly Report - Week 7 - 25.06.2020
 
 ## Goals from last week.
 
@@ -12,6 +12,7 @@
 
 *  Worked on fixing image markers which sometimes not being shown.
 *  Also fixed some issues on map screen.
+*  Wrote the blog post for the third milestone.
 
 ### Sreepradh.
 
