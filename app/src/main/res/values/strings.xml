@@ -23,6 +23,8 @@
     <string name="home_title_within_10_km">Within 10 KM</string>
     <string name="home_title_reset_filters">Reset all filters</string>
     <string name="home_msg_filter_location">To use the location filters, please grant the location permission and have your GPS turned on.</string>
+    <string name="home_title_delete">Delete</string>
+    <string name="home_msg_delete">Are you sure you want to delete this sighting?</string>
     <string name="title_add_sighting">Add Sighting</string>
 
     <string name="map_gps_dialog_title">GPS is turned off</string>

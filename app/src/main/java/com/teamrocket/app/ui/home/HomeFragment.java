@@ -48,6 +48,9 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.teamrocket.app.data.db.BirdSightingDao.Listener.ADDED;
+import static com.teamrocket.app.data.db.BirdSightingDao.Listener.DELETED;
+
 public class HomeFragment extends Fragment {
 
     public static final String TAG = "homeFragment";
@@ -73,9 +76,14 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        listener = sighting -> {
-            adapter.addSighting(sighting);
-            emptyView.setVisibility(View.GONE);
+        listener = (state, sighting) -> {
+            if (state == ADDED) {
+                adapter.addSighting(sighting);
+                emptyView.setVisibility(View.GONE);
+            } else if (state == DELETED) {
+                adapter.removeSighting(sighting);
+                if (adapter.getItemCount() == 0) emptyView.setVisibility(View.VISIBLE);
+            }
         };
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         dao.addListener(listener);
@@ -100,14 +108,27 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ((AppCompatActivity) getActivity()).setSupportActionBar(view.findViewById(R.id.toolbarHome));
 
-        adapter = new HomeAdapter(sighting -> {
-            MainActivity activity = (MainActivity) getActivity();
-            //Telling the map fragment to not reset filters when the navigation goes through
-            //the Main activity.
-            activity.getMapFragment().shouldResetFilters = false;
+        adapter = new HomeAdapter(new HomeAdapter.Listener() {
+            @Override
+            public void onClick(BirdSighting sighting) {
+                MainActivity activity = (MainActivity) getActivity();
+                //Telling the map fragment to not reset filters when the navigation goes through
+                //the Main activity.
+                activity.getMapFragment().shouldResetFilters = false;
 
-            activity.setBottomNavSelection(R.id.main_nav_map);
-            activity.getMapFragment().filterBird(sighting.getBird());
+                activity.setBottomNavSelection(R.id.main_nav_map);
+                activity.getMapFragment().filterBird(sighting.getBird());
+            }
+
+            @Override
+            public void onDeleteClick(BirdSighting sighting) {
+                new AlertDialog.Builder(requireActivity())
+                        .setTitle(R.string.home_title_delete)
+                        .setMessage(R.string.home_msg_delete)
+                        .setPositiveButton(android.R.string.ok, (d, w) -> dao.delete(sighting))
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show();
+            }
         });
 
         emptyView = view.findViewById(R.id.viewNoSightings);

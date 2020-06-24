@@ -3,6 +3,7 @@ package com.teamrocket.app.ui.home;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -54,13 +55,24 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
         notifyItemInserted(this.sightings.size());
     }
 
+    public void removeSighting(BirdSighting sighting) {
+        int index = this.sightings.indexOf(sighting);
+        if (index == -1) return;
+
+        this.sightings.remove(index);
+        notifyItemRemoved(index);
+    }
+
     public interface Listener {
         void onClick(BirdSighting sighting);
+
+        void onDeleteClick(BirdSighting sighting);
     }
 
     static class BirdSightingViewHolder extends ViewHolder {
         private TextView textTitle;
         private ImageView imageBird;
+        private ImageButton btnDelete;
 
         private Listener listener;
 
@@ -69,11 +81,13 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
             this.listener = listener;
             textTitle = itemView.findViewById(R.id.textTitleItemSighting);
             imageBird = itemView.findViewById(R.id.imageItemSighting);
+            btnDelete = itemView.findViewById(R.id.btnDeleteItemSighting);
         }
 
         void bind(BirdSighting birdSighting) {
             textTitle.setText(birdSighting.getBird().getName());
             Picasso.get().load(birdSighting.getBird().getUriPath()).fit().centerCrop().into(imageBird);
+            btnDelete.setOnClickListener(v -> listener.onDeleteClick(birdSighting));
 
             itemView.setOnClickListener(v -> listener.onClick(birdSighting));
         }

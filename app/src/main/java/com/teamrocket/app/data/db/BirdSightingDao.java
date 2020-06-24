@@ -1,6 +1,7 @@
 package com.teamrocket.app.data.db;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.RawQuery;
@@ -23,11 +24,14 @@ public abstract class BirdSightingDao {
     @Insert
     abstract long _insert(BirdSighting sighting);
 
+    @Delete
+    abstract void _delete(BirdSighting sighting);
+
     @Query("SELECT * FROM birdsighting WHERE name LIKE :name AND family LIKE :family")
     abstract List<BirdSighting> _findSimilar(String name, String family);
 
     @Query("SELECT * FROM birdsighting WHERE sightingId = :sightingId LIMIT 1")
-     public abstract BirdSighting getSighting(long sightingId);
+    public abstract BirdSighting getSighting(long sightingId);
 
     @RawQuery
     public abstract List<BirdSighting> filter(SupportSQLiteQuery query);
@@ -39,7 +43,14 @@ public abstract class BirdSightingDao {
     public void insert(BirdSighting sighting) {
         sighting.sightingId = _insert(sighting);
         for (Listener listener : listeners) {
-            listener.onAdded(sighting);
+            listener.onUpdate(Listener.ADDED, sighting);
+        }
+    }
+
+    public void delete(BirdSighting sighting) {
+        _delete(sighting);
+        for (Listener listener : listeners) {
+            listener.onUpdate(Listener.DELETED, sighting);
         }
     }
 
@@ -52,6 +63,9 @@ public abstract class BirdSightingDao {
     }
 
     public interface Listener {
-        void onAdded(BirdSighting sighting);
+        int ADDED = 0;
+        int DELETED = 1;
+
+        void onUpdate(int state, BirdSighting sighting);
     }
 }

@@ -89,6 +89,7 @@ public class AddSightingActivity extends AppCompatActivity {
     private static final String URL_WIKIPEDIA = "https://wikipedia.org/wiki/%s";
 
     private BirdSightingDao dao;
+    private BirdSightingDao.Listener listener;
     private CategoryDao categoryDao;
 
     private IWikiApi wikiApi;
@@ -128,7 +129,11 @@ public class AddSightingActivity extends AppCompatActivity {
         }
 
         dao = ((BTApplication) getApplication()).getBirdSightingDao();
-        dao.addListener(sighting -> finish());
+        listener = (state, sighting) -> {
+            if (state == BirdSightingDao.Listener.ADDED) finish();
+        };
+
+        dao.addListener(listener);
 
         wikiApi = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
@@ -209,6 +214,12 @@ public class AddSightingActivity extends AppCompatActivity {
             editLocation.setText(String.format(Locale.getDefault(), locationMask,
                     random.latitude, random.longitude));
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dao.removeListener(listener);
     }
 
     @Override

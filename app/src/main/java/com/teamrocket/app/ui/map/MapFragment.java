@@ -48,6 +48,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.teamrocket.app.data.db.BirdSightingDao.Listener.ADDED;
+import static com.teamrocket.app.data.db.BirdSightingDao.Listener.DELETED;
 
 public class MapFragment extends Fragment {
 
@@ -83,14 +85,25 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
-        listener = sighting -> {
+        listener = (state, sighting) -> {
             if (currentFilteredBird == null || sighting.getBird().equals(currentFilteredBird)) {
-                this.sightings.add(sighting);
-                BirdSighting.Location birdLoc = sighting.getLocation();
-                LatLng location = new LatLng(birdLoc.getLat(), birdLoc.getLon());
-                markers.add(new MarkerOptions().position(location));
-                showMapMarkers();
+                if (state == ADDED) {
+                    this.sightings.add(sighting);
+                    BirdSighting.Location birdLoc = sighting.getLocation();
+                    LatLng location = new LatLng(birdLoc.getLat(), birdLoc.getLon());
+                    markers.add(new MarkerOptions().position(location));
+                    showMapMarkers();
+                } else if (state == DELETED) {
+                    int index = this.sightings.indexOf(sighting);
+                    if (index == -1) return;
+
+                    this.sightings.remove(index);
+                    this.markers.remove(index);
+                    this.markerImages.remove(index);
+                    showMapMarkers();
+                }
             }
+
         };
         dao.addListener(listener);
         return inflater.inflate(R.layout.fragment_map, container, false);
