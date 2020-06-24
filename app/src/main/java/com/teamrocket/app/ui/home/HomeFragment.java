@@ -129,6 +129,10 @@ public class HomeFragment extends Fragment {
                         .setNegativeButton(android.R.string.cancel, null)
                         .show();
             }
+
+            @Override
+            public void onShareClick(BirdSighting sighting) {
+            }
         });
 
         emptyView = view.findViewById(R.id.viewNoSightings);

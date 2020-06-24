@@ -27,6 +27,19 @@
         tools:text="Bird #887" />
 
     <ImageButton
+        android:id="@+id/btnShareItemSighting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:elevation="4dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_share_24"
+        android:tint="@color/gray_7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnDeleteItemSighting" />
+
+    <ImageButton
         android:id="@+id/btnDeleteItemSighting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

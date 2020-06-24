@@ -67,11 +67,14 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
         void onClick(BirdSighting sighting);
 
         void onDeleteClick(BirdSighting sighting);
+
+        void onShareClick(BirdSighting sighting);
     }
 
     static class BirdSightingViewHolder extends ViewHolder {
         private TextView textTitle;
         private ImageView imageBird;
+        private ImageButton btnShare;
         private ImageButton btnDelete;
 
         private Listener listener;
@@ -82,12 +85,14 @@ public class HomeAdapter extends Adapter<HomeAdapter.BirdSightingViewHolder> {
             textTitle = itemView.findViewById(R.id.textTitleItemSighting);
             imageBird = itemView.findViewById(R.id.imageItemSighting);
             btnDelete = itemView.findViewById(R.id.btnDeleteItemSighting);
+            btnShare = itemView.findViewById(R.id.btnShareItemSighting);
         }
 
         void bind(BirdSighting birdSighting) {
             textTitle.setText(birdSighting.getBird().getName());
             Picasso.get().load(birdSighting.getBird().getUriPath()).fit().centerCrop().into(imageBird);
             btnDelete.setOnClickListener(v -> listener.onDeleteClick(birdSighting));
+            btnShare.setOnClickListener(v -> listener.onShareClick(birdSighting));
 
             itemView.setOnClickListener(v -> listener.onClick(birdSighting));
         }
