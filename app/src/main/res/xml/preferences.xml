@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/settings_title_general">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="showSightingLocations"
+            android:summary="Include the user's location in bird sightings."
+            android:title="@string/settings_title_add_locations" />
+
+        <ListPreference
+            android:defaultValue="Never"
+            android:entries="@array/auto_delete_times"
+            android:entryValues="@array/auto_delete_time_values"
+            android:key="autoDelete"
+            android:summary="Remove old sightings automatically after a certain amount of time."
+            android:title="@string/settings_title_auto_delete" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_title_other">
+
+        <Preference
+            android:key="export"
+            android:title="@string/settings_title_export_data" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

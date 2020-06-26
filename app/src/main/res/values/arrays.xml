@@ -8,4 +8,21 @@
         <item>Sparrows</item>
         <item>Woodpeckers</item>
     </string-array>
+
+    <string-array name="auto_delete_times">
+        <item>Never</item>
+        <item>After 1 month</item>
+        <item>After 3 months</item>
+        <item>After 6 months</item>
+    </string-array>
+
+
+    <!-- DO NOT TRANSLATE -->
+    <string-array name="auto_delete_time_values">
+        <item>Never</item>
+        <item>After 1 month</item>
+        <item>After 3 months</item>
+        <item>After 6 months</item>
+    </string-array>
+
 </resources>
