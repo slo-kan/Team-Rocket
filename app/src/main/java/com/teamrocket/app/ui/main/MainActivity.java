@@ -19,7 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.teamrocket.app.R;
 import com.teamrocket.app.ui.home.HomeFragment;
 import com.teamrocket.app.ui.map.MapFragment;
-import com.teamrocket.app.ui.search.SearchFragment;
+import com.teamrocket.app.ui.settings.SettingsFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private HomeFragment homeFragment;
     private MapFragment mapFragment;
-    private SearchFragment searchFragment;
+    private SettingsFragment settingsFragment;
 
     private Fragment currentFragment;
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         homeFragment = new HomeFragment();
         mapFragment = new MapFragment();
-        searchFragment = new SearchFragment();
+        settingsFragment = new SettingsFragment();
 
         bottomNavBar = findViewById(R.id.bottomNavBar);
         bottomNavBar.setOnNavigationItemSelectedListener(item -> {
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (itemId == R.id.main_nav_home) showFragment(homeFragment);
             else if (itemId == R.id.main_nav_map) showFragment(mapFragment);
-            else showFragment(searchFragment);
+            else showFragment(settingsFragment);
 
             return true;
         });

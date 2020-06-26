@@ -1,4 +1,4 @@
-package com.teamrocket.app.ui.search;
+package com.teamrocket.app.ui.settings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,13 +11,13 @@ import androidx.fragment.app.Fragment;
 
 import com.teamrocket.app.R;
 
-public class SearchFragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
     public static final String TAG = "searchFragment";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search, container, false);
+        return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 }

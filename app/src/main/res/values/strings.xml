@@ -51,5 +51,6 @@
     <string name="add_sighting_title_notes">Notes</string>
     <string name="add_sighting_read_on_wikipedia">Read on Wikipedia</string>
     <string name="home_msg_share">Checkout this bird I found!</string>
+    <string name="main_nav_settings">Settings</string>
 
 </resources>
