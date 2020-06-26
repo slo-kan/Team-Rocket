@@ -14,7 +14,6 @@
             android:id="@+id/toolbarHome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/app_name_small" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -22,13 +21,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerHome"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
+        android:layout_height="match_parent"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:padding="2dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
-    <include layout="@layout/home_no_sightings"/>
+    <include layout="@layout/home_no_sightings" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnAddSighting"
