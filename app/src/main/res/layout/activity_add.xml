@@ -38,7 +38,7 @@
                 android:layout_marginEnd="8dp"
                 android:background="@color/gray_0"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toStartOf="@id/textLocationAddSighting"
+                app:layout_constraintEnd_toStartOf="@id/textDateTimeAddSighting"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -81,8 +81,8 @@
                 android:text="@string/add_sighting_title_location"
                 android:textColor="@color/gray_9"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/imageAddSighting"
+                app:layout_constraintEnd_toEndOf="@id/textDateTimeAddSighting"
+                app:layout_constraintStart_toStartOf="@id/textDateTimeAddSighting"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
@@ -90,6 +90,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:layout_marginBottom="16dp"
                 android:background="@color/gray_0"
                 android:clickable="true"
                 android:cursorVisible="false"
@@ -97,20 +98,21 @@
                 android:gravity="center_vertical"
                 android:padding="12dp"
                 android:singleLine="true"
-                app:layout_constraintEnd_toEndOf="@id/textLocationAddSighting"
-                app:layout_constraintStart_toStartOf="@id/textLocationAddSighting"
+                app:layout_constraintBottom_toTopOf="@id/textDateTimeAddSighting"
+                app:layout_constraintEnd_toEndOf="@id/textDateTimeAddSighting"
+                app:layout_constraintStart_toStartOf="@id/textDateTimeAddSighting"
                 app:layout_constraintTop_toBottomOf="@id/textLocationAddSighting" />
 
             <TextView
                 android:id="@+id/textDateTimeAddSighting"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="@string/add_sighting_title_datetime"
                 android:textColor="@color/gray_9"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@id/textLocationAddSighting"
-                app:layout_constraintStart_toStartOf="@id/textLocationAddSighting"
+                app:layout_constraintBottom_toTopOf="@id/editDateTimeAddSighting"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/imageAddSighting"
                 app:layout_constraintTop_toBottomOf="@id/editLocationAddSighting" />
 
             <EditText
@@ -125,8 +127,8 @@
                 android:gravity="center_vertical"
                 android:padding="12dp"
                 android:singleLine="true"
-                app:layout_constraintEnd_toEndOf="@id/textLocationAddSighting"
-                app:layout_constraintStart_toStartOf="@id/textLocationAddSighting"
+                app:layout_constraintEnd_toEndOf="@id/textDateTimeAddSighting"
+                app:layout_constraintStart_toStartOf="@id/textDateTimeAddSighting"
                 app:layout_constraintTop_toBottomOf="@id/textDateTimeAddSighting" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

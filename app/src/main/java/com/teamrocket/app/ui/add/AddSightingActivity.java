@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -115,6 +116,8 @@ public class AddSightingActivity extends AppCompatActivity {
 
     private TextView btnMoreInfo;
 
+    private boolean shouldIncludeLocation;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setLanguage();
@@ -144,6 +147,9 @@ public class AddSightingActivity extends AppCompatActivity {
         categoryDao = ((BTApplication) getApplication()).getCategoryDao();
         categoryDao.populateDefaults(getBaseContext());
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        shouldIncludeLocation = prefs.getBoolean("showSightingLocations", true);
+
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
 
         imageThumbnail = findViewById(R.id.imageAddSighting);
@@ -154,9 +160,12 @@ public class AddSightingActivity extends AppCompatActivity {
         editNotes = findViewById(R.id.editNotesAddSighting);
         btnMoreInfo = findViewById(R.id.btnMoreInfoAddSighting);
 
-        if (!Utils.isLocationPermissionGranted(this)) {
+        if (shouldIncludeLocation && !Utils.isLocationPermissionGranted(this)) {
             Utils.requestLocationPermission(this, RC_LOCATION);
         }
+
+        editLocation.setVisibility(shouldIncludeLocation ? View.VISIBLE : View.GONE);
+        findViewById(R.id.textLocationAddSighting).setVisibility(shouldIncludeLocation ? View.VISIBLE : View.GONE);
 
         editFamily.setOnClickListener(v -> showSelectCategoryDialog());
 
@@ -179,7 +188,7 @@ public class AddSightingActivity extends AppCompatActivity {
 
         ImageButton btnPickImage = findViewById(R.id.btnPickImageAddSighting);
         btnPickImage.setOnClickListener(v -> {
-            //TODO: Check if location permission even required for SAF
+            //TODO: Check if storage permission is even required for SAF
             if (!Utils.isPermissionGranted(this, READ_EXTERNAL_STORAGE)) {
                 Utils.requestPermission(this, READ_EXTERNAL_STORAGE, RC_STORAGE);
                 return;
@@ -430,11 +439,16 @@ public class AddSightingActivity extends AppCompatActivity {
     }
 
     private boolean isFormValid() {
-        return imagePath != null
-                && !editLocation.getText().toString().isEmpty()
+        boolean isValid = imagePath != null
                 && !editDateTime.getText().toString().isEmpty()
                 && !editName.getText().toString().isEmpty()
                 && !editFamily.getText().toString().isEmpty();
+
+        if (shouldIncludeLocation) {
+            isValid = isValid && !editLocation.getText().toString().isEmpty();
+        }
+
+        return isValid;
     }
 
     private void addBird() {
@@ -465,7 +479,8 @@ public class AddSightingActivity extends AppCompatActivity {
         bird.setSize(Bird.SIZE_SMALL);
         bird.setColor("blue");
 
-        String[] locationParts = editLocation.getText().toString().split(", ");
+        String locString = shouldIncludeLocation ? editLocation.getText().toString() : "-1, -1";
+        String[] locationParts = locString.split(", ");
         double lat = Double.parseDouble(locationParts[0]);
         double lon = Double.parseDouble(locationParts[1]);
         BirdSighting.Location location = new BirdSighting.Location(lat, lon);

@@ -111,6 +111,10 @@ public class HomeFragment extends Fragment {
         adapter = new HomeAdapter(new HomeAdapter.Listener() {
             @Override
             public void onClick(BirdSighting sighting) {
+                if (sighting.getLocation().getLat() == -1) {
+                    return;
+                }
+
                 MainActivity activity = (MainActivity) getActivity();
                 //Telling the map fragment to not reset filters when the navigation goes through
                 //the Main activity.

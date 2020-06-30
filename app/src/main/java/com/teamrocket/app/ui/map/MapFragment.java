@@ -86,6 +86,10 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         listener = (state, sighting) -> {
+            if (sighting.getLocation().getLat() == -1) {
+                return;
+            }
+
             if (currentFilteredBird == null || sighting.getBird().equals(currentFilteredBird)) {
                 if (state == ADDED) {
                     this.sightings.add(sighting);
@@ -308,7 +312,7 @@ public class MapFragment extends Fragment {
         }
 
         this.sightings = filterBird == null
-                ? dao.getAll() : dao.findSimilar(filterBird);
+                ? dao.getAllWithLocations() : dao.findSimilarWithLocations(filterBird);
 
         this.markers.clear();
         this.markerImages.clear();

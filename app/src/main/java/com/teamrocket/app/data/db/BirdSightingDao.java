@@ -21,6 +21,9 @@ public abstract class BirdSightingDao {
     @Query("SELECT * FROM birdsighting")
     public abstract List<BirdSighting> getAll();
 
+    @Query("SELECT * FROM birdsighting WHERE lat > -1 AND lon > -1")
+    public abstract List<BirdSighting> getAllWithLocations();
+
     @Insert
     abstract long _insert(BirdSighting sighting);
 
@@ -29,6 +32,9 @@ public abstract class BirdSightingDao {
 
     @Query("SELECT * FROM birdsighting WHERE name LIKE :name AND family LIKE :family")
     abstract List<BirdSighting> _findSimilar(String name, String family);
+
+    @Query("SELECT * FROM birdsighting WHERE name LIKE :name AND family LIKE :family AND lat > -1 AND lon > -1")
+    abstract List<BirdSighting> _findSimilarWithLocations(String name, String family);
 
     @Query("DELETE FROM birdsighting WHERE time < :beforeTime")
     public abstract void deleteBefore(long beforeTime);
@@ -41,6 +47,10 @@ public abstract class BirdSightingDao {
 
     public List<BirdSighting> findSimilar(Bird bird) {
         return _findSimilar(bird.getName(), bird.getFamily());
+    }
+
+    public List<BirdSighting> findSimilarWithLocations(Bird bird) {
+        return _findSimilarWithLocations(bird.getName(), bird.getFamily());
     }
 
     public void insert(BirdSighting sighting) {
