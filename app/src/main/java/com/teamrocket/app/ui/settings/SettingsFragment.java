@@ -1,6 +1,7 @@
 package com.teamrocket.app.ui.settings;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -12,15 +13,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.google.gson.Gson;
 import com.teamrocket.app.BTApplication;
 import com.teamrocket.app.R;
 import com.teamrocket.app.data.db.BirdSightingDao;
 import com.teamrocket.app.data.db.CategoryDao;
+import com.teamrocket.app.data.tasks.SightingDeleteTask;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -28,12 +35,35 @@ public class SettingsFragment extends Fragment {
 
     private static final int RC_CREATE_FILE = 3923;
 
+    private SharedPreferences preferences;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
     private PreferenceFragment preferenceFragment;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        listener = (sharedPreferences, key) -> {
+            if (key.equals("autoDelete")) {
+                String value = sharedPreferences.getString(key, "Never");
+                if (value.equals("Never")) {
+                    cancelWorkRequest();
+                    return;
+                }
+
+                cancelWorkRequest();
+                enqueueWorkRequest();
+            }
+        };
+        preferences.registerOnSharedPreferenceChangeListener(listener);
+
         return inflater.inflate(R.layout.fragment_settings, container, false);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        preferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
@@ -86,5 +116,17 @@ public class SettingsFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void enqueueWorkRequest() {
+        WorkRequest request = new PeriodicWorkRequest.Builder(SightingDeleteTask.class, 12, TimeUnit.HOURS)
+                .addTag("SightingDeleteTask")
+                .build();
+
+        WorkManager.getInstance(requireContext()).enqueue(request);
+    }
+
+    private void cancelWorkRequest() {
+        WorkManager.getInstance(requireContext()).cancelAllWorkByTag("SightingDeleteTask");
     }
 }

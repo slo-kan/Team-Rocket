@@ -30,6 +30,9 @@ public abstract class BirdSightingDao {
     @Query("SELECT * FROM birdsighting WHERE name LIKE :name AND family LIKE :family")
     abstract List<BirdSighting> _findSimilar(String name, String family);
 
+    @Query("DELETE FROM birdsighting WHERE time < :beforeTime")
+    public abstract void deleteBefore(long beforeTime);
+
     @Query("SELECT * FROM birdsighting WHERE sightingId = :sightingId LIMIT 1")
     public abstract BirdSighting getSighting(long sightingId);
 
