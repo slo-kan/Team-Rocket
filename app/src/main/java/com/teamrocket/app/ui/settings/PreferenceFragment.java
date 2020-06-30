@@ -11,6 +11,15 @@ import com.teamrocket.app.R;
 
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
+    //Initialisation of this fragment might take some time and until then findPreference()
+    //cannot be called because it will return null.
+    //This listener will notify SettingsFragment when initialisation is done.
+    private OnCreatedListener listener;
+
+    public PreferenceFragment(OnCreatedListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
@@ -19,5 +28,10 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.listener.onCreated();
+    }
+
+    public interface OnCreatedListener {
+        void onCreated();
     }
 }

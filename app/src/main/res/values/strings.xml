@@ -7,6 +7,7 @@
     <string name="main_nav_categories">Categories</string>
     <string name="main_nav_search">Search</string>
     <string name="main_title_filter">Filter</string>
+    <string name="main_nav_settings">Settings</string>
 
     <string name="home_add_sighting">Add Sighting</string>
     <string name="home_msg_no_sightings">You haven\'t added any bird sightings. Add one by tapping the button below.</string>
@@ -25,11 +26,12 @@
     <string name="home_msg_filter_location">To use the location filters, please grant the location permission and have your GPS turned on.</string>
     <string name="home_title_delete">Delete</string>
     <string name="home_msg_delete">Are you sure you want to delete this sighting?</string>
-    <string name="title_add_sighting">Add Sighting</string>
+    <string name="home_msg_share">Checkout this bird I found!</string>
 
     <string name="map_gps_dialog_title">GPS is turned off</string>
     <string name="map_gps_dialog_message">You can still see your bird sighting history but your current location will not be displayed.</string>
 
+    <string name="title_add_sighting">Add Sighting</string>
     <string name="add_sighting_no_camera">There are no camera apps installed on your device.</string>
     <string name="add_sighting_image_file_error">There was an error while trying to take a photo.</string>
     <string name="add_sighting_title_select_category">Select category</string>
@@ -50,12 +52,12 @@
     <string name="add_sighting_error_wiki">There was an error trying to get bird information</string>
     <string name="add_sighting_title_notes">Notes</string>
     <string name="add_sighting_read_on_wikipedia">Read on Wikipedia</string>
-    <string name="home_msg_share">Checkout this bird I found!</string>
-    <string name="main_nav_settings">Settings</string>
+
     <string name="settings_title_general">General</string>
     <string name="settings_title_add_locations">Add user location to bird sightings</string>
     <string name="settings_title_auto_delete">Auto-delete bird sightings</string>
     <string name="settings_title_export_data">Export bird sighting data</string>
     <string name="settings_title_other">Other</string>
+    <string name="settings_msg_export_successful">Exported data successfully</string>
 
 </resources>
