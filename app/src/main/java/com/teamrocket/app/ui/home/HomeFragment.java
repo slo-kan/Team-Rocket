@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -137,6 +138,22 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onShareClick(BirdSighting sighting) {
+                Uri imageUri = Uri.parse(sighting.getBird().getUriPath());
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent, ""));
+//                Intent intent = ShareCompat.IntentBuilder.from(getActivity())
+//                        .setType("image/png")
+//                        .setStream(imageUri)
+//                        .setChooserTitle("Choose image client")
+//                        .getIntent();
+//
+//                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+//                    startActivity(intent);
+//                }
             }
         });
 

@@ -93,6 +93,7 @@ public class MapFragment extends Fragment {
             if (sighting.getLocation().getLat() < -999) {
                 TextView textMsgBanner = banner.findViewById(R.id.textMsgBanner);
                 textMsgBanner.setText(getString(R.string.map_msg_banner, dao.countAllWithoutLocations()));
+                animateBanner(dao.countAllWithoutLocations() > 0 ? -banner.getHeight() - Utils.toPx(24, requireContext()) : 0);
                 return;
             }
 
@@ -187,6 +188,9 @@ public class MapFragment extends Fragment {
             ((MainActivity) requireActivity()).getHomeFragment().showNoLocationBirds();
             ((MainActivity) requireActivity()).setBottomNavSelection(R.id.main_nav_home);
         });
+        if (dao.countAllWithoutLocations() == 0) {
+            animateBanner(-banner.getHeight() - Utils.toPx(24, requireContext()));
+        }
     }
 
     private void showMapMarkers() {
