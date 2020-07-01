@@ -81,6 +81,20 @@
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/filter_chip_no_location"
+            style="@style/AppTheme.Chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_title_no_location" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/filter_chip_any_location"
+            style="@style/AppTheme.Chip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_title_any_location" />
+
+        <com.google.android.material.chip.Chip
             android:id="@+id/filter_chip_1_km"
             style="@style/AppTheme.Chip"
             android:layout_width="wrap_content"

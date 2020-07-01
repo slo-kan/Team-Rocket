@@ -22,7 +22,6 @@
     <string name="home_title_within_km">Dentro de 1 KM</string>
     <string name="home_title_within_10_km">Dentro de 10 KM</string>
     <string name="home_title_reset_filters">Restablecer todos los filtros</string>
-    <string name="home_msg_filter_location">o use los filtros de ubicación, otorgue el permiso de ubicación y encienda su GPS.</string>
 
     <string name="map_gps_dialog_title">GPS esta apagado</string>
     <string name="map_gps_dialog_message">Todavía puede ver su historial de avistamiento de aves, pero su ubicación actual no se mostrará.</string>

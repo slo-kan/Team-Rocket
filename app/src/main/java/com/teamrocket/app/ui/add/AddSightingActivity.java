@@ -479,7 +479,7 @@ public class AddSightingActivity extends AppCompatActivity {
         bird.setSize(Bird.SIZE_SMALL);
         bird.setColor("blue");
 
-        String locString = shouldIncludeLocation ? editLocation.getText().toString() : "-1, -1";
+        String locString = shouldIncludeLocation ? editLocation.getText().toString() : "-1000, -1000";
         String[] locationParts = locString.split(", ");
         double lat = Double.parseDouble(locationParts[0]);
         double lon = Double.parseDouble(locationParts[1]);

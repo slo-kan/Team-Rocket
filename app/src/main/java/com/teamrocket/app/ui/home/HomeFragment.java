@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -225,16 +226,15 @@ public class HomeFragment extends Fragment {
         ChipGroup cgLocation = filterView.findViewById(R.id.cgLocation);
 
         boolean shouldShowLocationFilters = Utils.isLocationPermissionGranted(requireContext())
-                && Utils.isGpsEnabled(requireContext());
+                && Utils.isGpsEnabled(requireContext()) && lastLocation != null;
 
-        //TODO: Solve for when chip is enabled and then gps is turned off
-        for (Chip chip : getChips(cgLocation)) chip.setEnabled(shouldShowLocationFilters);
+//        for (Chip chip : getChips(cgLocation)) chip.setEnabled(shouldShowLocationFilters);
         View locationWarning = filterView.findViewById(R.id.dialog_filter_location_warning);
         locationWarning.setVisibility(shouldShowLocationFilters ? View.GONE : View.VISIBLE);
-
-        if (!Utils.isLocationPermissionGranted(requireContext())) {
-            Utils.requestLocationPermission(this, RC_LOCATION);
-        }
+//
+//        if (!Utils.isLocationPermissionGranted(requireContext())) {
+//            Utils.requestLocationPermission(this, RC_LOCATION);
+//        }
 
         List<Chip> chips = getChips(cgCategories);
         List<Boolean> selectedCategories = chips
@@ -310,7 +310,7 @@ public class HomeFragment extends Fragment {
     private String getFilterQuery(List<String> categories, int dateFilter, int locationFilter) {
         String query = "SELECT * FROM birdsighting ";
 
-        if ((categories != null && !categories.isEmpty()) || dateFilter != -1 || locationFilter != -1) {
+        if ((categories != null && !categories.isEmpty()) || dateFilter != -1 || (locationFilter != -1 && lastLocation != null)) {
             query += "WHERE ";
         }
 
@@ -336,29 +336,49 @@ public class HomeFragment extends Fragment {
             query += " time > " + from + " AND time < " + currentTime;
         }
 
-        if (locationFilter != -1 && lastLocation != null) {
-            if (!query.trim().endsWith("WHERE")) {
-                query += " AND ";
+        if (locationFilter != -1) {
+
+            int distKm = locationFilter == R.id.filter_chip_no_location ? -1
+                    : locationFilter == R.id.filter_chip_any_location ? -2
+                    : locationFilter == R.id.filter_chip_1_km ? 1 : 10;
+
+            if (distKm == -1 || distKm == -2) {
+                if (query.trim().endsWith("birdsighting")) {
+                    query += "WHERE ";
+                }
+
+                if (!query.trim().endsWith("WHERE")) {
+                    query += " AND ";
+                }
+
+                query += distKm == -1 ? "lat < -999 AND lon < -999" : "lat > -999 AND lon > -999";
+            } else if (lastLocation != null) {
+                if (!query.trim().endsWith("WHERE")) {
+                    query += " AND ";
+                }
+
+                LatLng loc = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                double[] deviations = Utils.getCoordinateDeviations(loc, distKm);
+
+                double latA = loc.latitude - deviations[0] / 2;
+                double latB = loc.latitude + deviations[0] / 2;
+
+                double lonA = loc.longitude - deviations[1] / 2;
+                double lonB = loc.longitude + deviations[1] / 2;
+
+                double latMax = Math.max(latA, latB);
+                double latMin = Math.min(latA, latB);
+
+                double lonMax = Math.max(lonA, lonB);
+                double lonMin = Math.min(lonA, lonB);
+
+                query += " lat > " + latMin + " AND lat < " + latMax;
+                query += " AND lon > " + lonMin + " AND lon < " + lonMax;
+            } else {
+                Toast.makeText(requireContext(), R.string.home_msg_loc_filter_ignored, Toast.LENGTH_LONG).show();
+                ChipGroup cgLocation = filterView.findViewById(R.id.cgLocation);
+                cgLocation.check(View.NO_ID);
             }
-
-            LatLng loc = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-            int distKm = locationFilter == R.id.filter_chip_1_km ? 1 : 10;
-            double[] deviations = Utils.getCoordinateDeviations(loc, distKm);
-
-            double latA = loc.latitude - deviations[0] / 2;
-            double latB = loc.latitude + deviations[0] / 2;
-
-            double lonA = loc.longitude - deviations[1] / 2;
-            double lonB = loc.longitude + deviations[1] / 2;
-
-            double latMax = Math.max(latA, latB);
-            double latMin = Math.min(latA, latB);
-
-            double lonMax = Math.max(lonA, lonB);
-            double lonMin = Math.min(lonA, lonB);
-
-            query += " lat > " + latMin + " AND lat < " + latMax;
-            query += " AND lon > " + lonMin + " AND lon < " + lonMax;
         }
 
         return query;

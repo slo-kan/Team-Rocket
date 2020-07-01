@@ -21,7 +21,6 @@
     <string name="home_title_within_km">Innerhalb von 1 km</string>
     <string name="home_title_within_10_km">Innerhalb von 10 km</string>
     <string name="home_title_reset_filters">Setzen Sie alle Filter zurück</string>
-    <string name="home_msg_filter_location">Um die Standortfilter zu verwenden, erteilen Sie bitte die Standortberechtigung und lassen Sie Ihr GPS einschalten.</string>
     <string name="home_title_change_language">Sprache ändern</string>
     <string name="map_gps_dialog_title"> GPS ist ausgeschaltet </string>
     <string name="map_gps_dialog_message">Sie können immer noch Ihren Vogelbeobachtungsverlauf sehen, aber Ihr aktueller Standort wird nicht angezeigt.</string>
