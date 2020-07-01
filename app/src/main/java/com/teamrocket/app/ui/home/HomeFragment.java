@@ -384,6 +384,20 @@ public class HomeFragment extends Fragment {
         return query;
     }
 
+    public void showNoLocationBirds() {
+        ChipGroup cgCategories = filterView.findViewById(R.id.cgCategories);
+        ChipGroup cgDate = filterView.findViewById(R.id.cgDate);
+        ChipGroup cgLocation = filterView.findViewById(R.id.cgLocation);
+
+        List<Chip> chips = getChips(cgCategories);
+
+        emptyText.setText(R.string.home_msg_no_sightings);
+        cgDate.check(View.NO_ID);
+        cgLocation.check(R.id.filter_chip_no_location);
+        for (int i = 0; i < chips.size(); i++) chips.get(i).setChecked(false);
+        filter();
+    }
+
     private String getEnglishCategoryName(String localisedName) {
         List<String> localisedNames = Arrays.asList(requireActivity().getBaseContext().getResources().getStringArray(R.array.categories));
 

@@ -24,6 +24,9 @@ public abstract class BirdSightingDao {
     @Query("SELECT * FROM birdsighting WHERE lat > -1000 AND lon > -1000")
     public abstract List<BirdSighting> getAllWithLocations();
 
+    @Query("SELECT COUNT(sightingId) FROM birdsighting WHERE lat < -999 AND lon < -999")
+    public abstract int countAllWithoutLocations();
+
     @Insert
     abstract long _insert(BirdSighting sighting);
 

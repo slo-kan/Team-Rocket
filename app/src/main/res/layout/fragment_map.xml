@@ -20,4 +20,6 @@
         android:src="@drawable/ic_recenter_24"
         android:tint="@color/black" />
 
+    <include layout="@layout/map_banner" />
+
 </FrameLayout>

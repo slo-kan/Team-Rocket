@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
         return this.mapFragment;
     }
 
+    public HomeFragment getHomeFragment() {
+        return homeFragment;
+    }
+
     public void setBottomNavSelection(int id) {
         this.bottomNavBar.setSelectedItemId(id);
     }

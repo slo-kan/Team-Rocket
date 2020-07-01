@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -36,6 +37,7 @@ import com.teamrocket.app.data.network.IWikiApi;
 import com.teamrocket.app.model.Bird;
 import com.teamrocket.app.model.BirdSighting;
 import com.teamrocket.app.model.WikiResponse;
+import com.teamrocket.app.ui.main.MainActivity;
 import com.teamrocket.app.util.Utils;
 
 import java.util.ArrayList;
@@ -76,6 +78,8 @@ public class MapFragment extends Fragment {
     private BirdSightingDao dao;
     private BirdSightingDao.Listener listener;
 
+    private View banner;
+
     private IWikiApi wikiApi;
     private View dialogView;
     private View dialogContent;
@@ -86,7 +90,9 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         listener = (state, sighting) -> {
-            if (sighting.getLocation().getLat() == -1) {
+            if (sighting.getLocation().getLat() < -999) {
+                TextView textMsgBanner = banner.findViewById(R.id.textMsgBanner);
+                textMsgBanner.setText(getString(R.string.map_msg_banner, dao.countAllWithoutLocations()));
                 return;
             }
 
@@ -170,6 +176,17 @@ public class MapFragment extends Fragment {
         dialogView = View.inflate(requireContext(), R.layout.map_dialog_info, null);
         dialogContent = dialogView.findViewById(R.id.map_dialog_content);
         dialogProgress = dialogView.findViewById(R.id.progress_dialog_info);
+
+        banner = view.findViewById(R.id.mapBanner);
+        TextView textMsgBanner = view.findViewById(R.id.textMsgBanner);
+        textMsgBanner.setText(getString(R.string.map_msg_banner, dao.countAllWithoutLocations()));
+        view.findViewById(R.id.btnDismissBanner).setOnClickListener(v -> {
+            animateBanner(-banner.getHeight() - Utils.toPx(24, requireContext()));
+        });
+        view.findViewById(R.id.btnShowInListBanner).setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).getHomeFragment().showNoLocationBirds();
+            ((MainActivity) requireActivity()).setBottomNavSelection(R.id.main_nav_home);
+        });
     }
 
     private void showMapMarkers() {
@@ -191,6 +208,16 @@ public class MapFragment extends Fragment {
         if (requestCode == RC_LOCATION && Utils.isLocationPermissionGranted(grantResults)) {
             getLocationAndZoom();
         }
+    }
+
+    private void animateBanner(int translation) {
+        if (banner == null) return;
+
+        banner.animate()
+                .translationY(translation)
+                .setDuration(150)
+                .setInterpolator(new FastOutSlowInInterpolator())
+                .start();
     }
 
     private void showSightingInfo(BirdSighting sighting) {
@@ -296,6 +323,8 @@ public class MapFragment extends Fragment {
     }
 
     public void filterBird(Bird filterBird, boolean force) {
+        animateBanner(0);
+
         if (!shouldResetFilters) {
             shouldResetFilters = true;
         }

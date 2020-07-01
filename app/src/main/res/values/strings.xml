@@ -33,6 +33,9 @@
 
     <string name="map_gps_dialog_title">GPS is turned off</string>
     <string name="map_gps_dialog_message">You can still see your bird sighting history but your current location will not be displayed.</string>
+    <string name="map_title_dismiss">Dismiss</string>
+    <string name="map_title_show_in_list">Show in list</string>
+    <string name="map_msg_banner">%1$d sightings with no location are not shown on the map.</string>
 
     <string name="title_add_sighting">Add Sighting</string>
     <string name="add_sighting_no_camera">There are no camera apps installed on your device.</string>
