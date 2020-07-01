@@ -47,4 +47,21 @@
     <string name="add_sighting_error_wiki">Beim Versuch, Vogelinformationen abzurufen, ist ein Fehler aufgetreten</string>
     <string name="add_sighting_read_on_wikipedia">Lesen Sie auf Wikipedia</string>
     <string name="home_title_filter_sightings">Sichtungen filtern</string>
+    <string name="main_nav_settings">die Einstellungen</string>
+    <string name="home_msg_filter_location">Um die Entfernungsfilter zu verwenden, erteilen Sie bitte die Standortberechtigung und lassen Sie Ihr GPS einschalten.</string>
+    <string name="home_title_delete">Löschen</string>
+    <string name="home_msg_delete">Möchten Sie diese Sichtung wirklich löschen?</string>
+    <string name="home_msg_share">" Kasse diesen Vogel, den ich gefunden habe!"</string>
+    <string name="home_title_no_location">Kein Ort</string>
+    <string name="home_title_any_location">Beliebiger Ort</string>
+    <string name="home_msg_loc_filter_ignored">Entfernungsfilter werden ignoriert, da die Berechtigung verweigert oder das GPS deaktiviert ist.</string>
+    <string name="map_title_dismiss">Entlassen</string>
+    <string name="map_title_show_in_list">In Liste anzeigen</string>
+    <string name="map_msg_banner">% 1 $ d Sichtungen ohne Standort werden auf der Karte nicht angezeigt.</string>
+    <string name="settings_title_general">Allgemeines</string>
+    <string name="settings_title_add_locations">"Hinzufügen des Benutzerstandorts zu Vogelbeobachtungen "</string>
+    <string name="settings_title_auto_delete">Vogelbeobachtungen automatisch löschen</string>
+    <string name="settings_title_export_data">Exportieren Sie Vogelbeobachtungsdaten</string>
+    <string name="settings_title_other">Andere</string>
+    <string name="settings_msg_export_successful">Daten erfolgreich exportiert</string>
 </resources>

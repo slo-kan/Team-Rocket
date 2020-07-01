@@ -49,4 +49,21 @@
     <string name="add_sighting_error_wiki">Se produjo un error al intentar obtener información sobre las aves.</string>
     <string name="add_sighting_read_on_wikipedia">Leer en Wikipedia</string>
     <string name="home_title_filter_sightings">Filtrar avistamientos</string>
+    <string name="main_nav_settings">Configuraciones</string>
+    <string name="home_msg_filter_location">Para usar los filtros de distancia, otorgue el permiso de ubicación y active su GPS.</string>
+    <string name="home_title_delete">Eliminar</string>
+    <string name="home_msg_delete">Estás segura de que quieres eliminar este avistamiento?</string>
+    <string name="home_msg_share">Mira este pájaro que encontré!</string>
+    <string name="home_title_no_location">Ninguna ubicación</string>
+    <string name="home_title_any_location">Cualquier ubicación</string>
+    <string name="home_msg_loc_filter_ignored">Los filtros de distancia se ignoran porque el permiso es denegado o el GPS está apagado.</string>
+    <string name="map_title_dismiss">Descartar</string>
+    <string name="map_title_show_in_list">Mostrar en la lista</string>
+    <string name="map_msg_banner">Los avistamientos% 1 $ d sin ubicación no se muestran en el mapa.</string>
+    <string name="settings_title_general">General</string>
+    <string name="settings_title_add_locations">"Agregar ubicación del usuario a los avistamientos de aves "</string>
+    <string name="settings_title_auto_delete">"Eliminar automáticamente avistamientos de aves "</string>
+    <string name="settings_title_export_data">Exportar datos de avistamiento de aves</string>
+    <string name="settings_title_other">Otra</string>
+    <string name="settings_msg_export_successful">Datos exportados exitosamente</string>
 </resources>

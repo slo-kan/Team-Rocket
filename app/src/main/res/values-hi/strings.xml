@@ -48,5 +48,22 @@
     <string name="add_sighting_read_on_wikipedia">विकिपीडिया पर पढ़ें</string>
     <string name="home_title_filter_sightings">फ़िल्टर दृष्टि</string>
     <string name="home_title_choose_categories">श्रेणियां चुनें</string>
+    <string name="main_nav_settings">समायोजन</string>
+    <string name="home_msg_filter_location">दूरी फ़िल्टर का उपयोग करने के लिए, कृपया स्थान की अनुमति प्रदान करें और अपना GPS चालू करें।</string>
+    <string name="home_title_delete">हटाएं</string>
+    <string name="home_msg_delete">क्या आप वाकई इस दृश्य को हटाना चाहते हैं?</string>
+    <string name="home_msg_share">" इस पक्षी को मैंने पाया!"</string>
+    <string name="home_title_no_location">कोई स्थान नहीं</string>
+    <string name="home_title_any_location">कोई भी स्थान</string>
+    <string name="home_msg_loc_filter_ignored">दूरस्थ फ़िल्टर्स को अनदेखा कर दिया जाता है क्योंकि अनुमति से इनकार किया जाता है या GPS बंद है।</string>
+    <string name="map_title_dismiss">" खारिज"</string>
+    <string name="map_title_show_in_list">सूची में दिखाएं</string>
+    <string name="map_msg_banner">मानचित्र पर कोई स्थान नहीं दिखाते हुए% 1 $ d देखे गए।</string>
+    <string name="settings_title_general">सामान्य</string>
+    <string name="settings_title_add_locations">पक्षी दृष्टि के लिए उपयोगकर्ता स्थान जोड़ें</string>
+    <string name="settings_title_auto_delete">ऑटो-डिलीट बर्ड व्यूइंग</string>
+    <string name="settings_title_export_data">निर्यात पक्षी दृश्य डेटा</string>
+    <string name="settings_title_other">अन्य</string>
+    <string name="settings_msg_export_successful">डेटा सफलतापूर्वक निर्यात किया गया</string>
 
 </resources>
