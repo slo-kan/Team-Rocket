@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,6 +44,7 @@ import com.teamrocket.app.ui.add.AddSightingActivity;
 import com.teamrocket.app.ui.main.MainActivity;
 import com.teamrocket.app.util.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -138,22 +140,19 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onShareClick(BirdSighting sighting) {
-                Uri imageUri = Uri.parse(sighting.getBird().getUriPath());
+                String uriPath = sighting.getBird().getUriPath();
+                Uri imageUri = uriPath.startsWith("file://") ? FileProvider.getUriForFile(requireActivity(),
+                        "com.teamrocket.app.fileprovider", new File(sighting.getBird().getImagePath()))
+                        : Uri.parse(sighting.getBird().getUriPath());
+
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.home_msg_share));
                 shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 shareIntent.setType("image/jpeg");
-                startActivity(Intent.createChooser(shareIntent, ""));
-//                Intent intent = ShareCompat.IntentBuilder.from(getActivity())
-//                        .setType("image/png")
-//                        .setStream(imageUri)
-//                        .setChooserTitle("Choose image client")
-//                        .getIntent();
-//
-//                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-//                    startActivity(intent);
-//                }
+
+                startActivity(Intent.createChooser(shareIntent, null));
             }
         });
 
