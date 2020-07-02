@@ -9,29 +9,35 @@
 
 ### Vasudev.
 
-*  Worked on adding automatically delete bird sighting older than 'x' months feature to the app.
-*  Added a feature that allows user to disable location access for bird sightings.
-*  Added 'export data to file' option in main screen.
+*  Added a Settings screen in the app to allow the user to have preferences
+*  Added an option to let the app automatically delete old sightings after a certain amount of time.
+*  Implemented a user setting to disable including the bird location, for privacy concerns.
+*  Allow the user to export bird sighting data and his custom categories to external storage.
 
 ### Sreepradh.
 
-*  Worked on adding share button that allows the user to share images on social media.
-
+*  Worked on automatically hiding the map banner if there are no sightings without locations.
+*  Added a button to let the user share the app with the system.
+*  Implemented social media sharing into the app for bird sightings.
 
 ### Rahul.
 
-*  Worked on gathering the sounds of different birds required for adding bird sounds to the app.
+*  Worked on analysing the requirements for enabling audio recording in the app.
+*  Started working on updated class diagrams and other necessary tasks for the blog.
 
 ### Lokesh.
 
-* 
+* Researched about Firebase database and how to include it in our app, to have shared databases.
+* Started working on figuring out how data will be represented in a shared state, with user sightings, user categories, and images.
 
 ## Progress next week.
 
+*  Work on creating the presentation and writing the blog for the next presentation.
+*  Test the app thoroughly and find any crashes or bugs.
 *  Identify and fix issues that might arise in the app.
 
 ## Meeting agenda.
 
-*  Demonstrate the working of the app, get feedback and suggestions, and make any changes if necessary.
-
-*  Discuss about the blog and presentation for the fourth milestone.
+*  Get suggestions from Rana about our app regarding it's design and features, specifically about this final milestone.
+*  Talk about and clear any ambiguity in features and requirements, for example if we have misinterpreted something.
+*  Receive feedback on our presentation for next week.
