@@ -57,7 +57,7 @@
     <string name="home_msg_loc_filter_ignored">Entfernungsfilter werden ignoriert, da die Berechtigung verweigert oder das GPS deaktiviert ist.</string>
     <string name="map_title_dismiss">Entlassen</string>
     <string name="map_title_show_in_list">In Liste anzeigen</string>
-    <string name="map_msg_banner">% 1 $ d Sichtungen ohne Standort werden auf der Karte nicht angezeigt.</string>
+    <string name="map_msg_banner">%1$d Sichtungen ohne Standort werden auf der Karte nicht angezeigt.</string>
     <string name="settings_title_general">Allgemeines</string>
     <string name="settings_title_add_locations">"Hinzufügen des Benutzerstandorts zu Vogelbeobachtungen "</string>
     <string name="settings_title_auto_delete">Vogelbeobachtungen automatisch löschen</string>

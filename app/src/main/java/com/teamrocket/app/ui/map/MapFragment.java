@@ -302,7 +302,10 @@ public class MapFragment extends Fragment {
         }
         LatLngBounds bounds = boundsBuilder.build();
 
-        int padding = Utils.toPx(32, requireContext());
+        int padding = Utils.toPx(56, requireContext());
+        if (banner.getVisibility() == View.VISIBLE) {
+            padding += banner.getHeight();
+        }
         map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
         iconRecenter.setVisibility(View.GONE);
     }
