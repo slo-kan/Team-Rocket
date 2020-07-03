@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -189,7 +190,13 @@ public class MapFragment extends Fragment {
             ((MainActivity) requireActivity()).setBottomNavSelection(R.id.main_nav_home);
         });
         if (dao.countAllWithoutLocations() == 0) {
-            animateBanner(-banner.getHeight() - Utils.toPx(24, requireContext()));
+            banner.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    animateBanner(-banner.getHeight() - Utils.toPx(24, requireContext()));
+                    banner.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
         }
     }
 
@@ -330,7 +337,7 @@ public class MapFragment extends Fragment {
     }
 
     public void filterBird(Bird filterBird, boolean force) {
-        animateBanner(0);
+        if (dao != null && dao.countAllWithoutLocations() > 0) animateBanner(0);
 
         if (!shouldResetFilters) {
             shouldResetFilters = true;
