@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
         adapter = new HomeAdapter(new HomeAdapter.Listener() {
             @Override
             public void onClick(BirdSighting sighting) {
-                if (sighting.getLocation().getLat() == -1) {
+                if (sighting.getLocation().getLat() == -1000) {
                     return;
                 }
 

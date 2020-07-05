@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
@@ -45,14 +46,7 @@ public class SettingsFragment extends Fragment {
         preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         listener = (sharedPreferences, key) -> {
             if (key.equals("autoDeleteSightings")) {
-                String value = sharedPreferences.getString(key, "");
-                if (value.isEmpty() || value.equals("0")) {
-                    cancelWorkRequest();
-                    return;
-                }
 
-                cancelWorkRequest();
-                enqueueWorkRequest();
             }
         };
         preferences.registerOnSharedPreferenceChangeListener(listener);
@@ -96,6 +90,21 @@ public class SettingsFragment extends Fragment {
             startActivityForResult(createIntent, RC_CREATE_FILE);
             return true;
         });
+
+        preferenceFragment.findPreference("autoDeleteSightings").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                String value = (String) newValue;
+                if (value.isEmpty() || value.equals("0")) {
+                    cancelWorkRequest();
+                    return true;
+                }
+
+                cancelWorkRequest();
+                enqueueWorkRequest();
+                return true;
+            }
+        });
     }
 
     private void exportData(Uri uri) {
@@ -124,6 +133,8 @@ public class SettingsFragment extends Fragment {
                 .build();
 
         WorkManager.getInstance(requireContext()).enqueue(request);
+
+        new SightingDeleteTask.Task().delete2(requireActivity().getApplicationContext());
     }
 
     private void cancelWorkRequest() {
