@@ -60,7 +60,6 @@
     <string name="map_title_show_in_list">सूची में दिखाएं</string>
     <string name="map_msg_banner">मानचित्र पर कोई स्थान नहीं दिखाते हुए %1$d देखे गए।</string>
     <string name="settings_title_general">सामान्य</string>
-    <string name="settings_title_add_locations">पक्षी दृष्टि के लिए उपयोगकर्ता स्थान जोड़ें</string>
     <string name="settings_title_auto_delete">ऑटो-डिलीट बर्ड व्यूइंग</string>
     <string name="settings_title_export_data">निर्यात पक्षी दृश्य डेटा</string>
     <string name="settings_title_other">अन्य</string>

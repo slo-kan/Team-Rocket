@@ -148,7 +148,7 @@ public class AddSightingActivity extends AppCompatActivity {
         categoryDao.populateDefaults(getBaseContext());
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        shouldIncludeLocation = prefs.getBoolean("showSightingLocations", true);
+        shouldIncludeLocation = !prefs.getBoolean("hideSightingLocations", false);
 
         locationProvider = LocationServices.getFusedLocationProviderClient(this);
 

@@ -60,10 +60,12 @@
     <string name="add_sighting_read_on_wikipedia">Read on Wikipedia</string>
 
     <string name="settings_title_general">General</string>
-    <string name="settings_title_add_locations">Add user location to bird sightings</string>
+    <string name="settings_title_add_locations">Disable location for future sightings</string>
     <string name="settings_title_auto_delete">Auto-delete bird sightings</string>
+    <string name="settings_msg_auto_delete">Remove old sightings automatically after a certain amount of time</string>
     <string name="settings_title_export_data">Export bird sighting data</string>
     <string name="settings_title_other">Other</string>
     <string name="settings_msg_export_successful">Exported data successfully</string>
+    <string name="settings_hint_auto_delete">(months)</string>
 
 </resources>

@@ -61,7 +61,6 @@
     <string name="map_title_show_in_list">Mostrar en la lista</string>
     <string name="map_msg_banner">Los avistamientos %1$d sin ubicación no se muestran en el mapa.</string>
     <string name="settings_title_general">General</string>
-    <string name="settings_title_add_locations">"Agregar ubicación del usuario a los avistamientos de aves "</string>
     <string name="settings_title_auto_delete">"Eliminar automáticamente avistamientos de aves "</string>
     <string name="settings_title_export_data">Exportar datos de avistamiento de aves</string>
     <string name="settings_title_other">Otra</string>

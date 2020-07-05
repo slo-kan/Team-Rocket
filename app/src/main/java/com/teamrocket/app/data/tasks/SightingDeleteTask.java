@@ -22,14 +22,13 @@ public class SightingDeleteTask extends Worker {
     @Override
     public Result doWork() {
         String selectedTime = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-                .getString("autoDelete", "");
+                .getString("autoDeleteSightings", "");
 
-        if (selectedTime.isEmpty() || selectedTime.equals("Never")) {
+        if (selectedTime.isEmpty() || selectedTime.equals("0")) {
             return Result.success();
         }
 
-        int months = selectedTime.equals("After 1 month") ? 1 :
-                selectedTime.equals("After 3 months") ? 3 : 6;
+        int months = Integer.parseInt(selectedTime);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -months);

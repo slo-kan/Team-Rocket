@@ -1,10 +1,14 @@
 package com.teamrocket.app.ui.settings;
 
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.teamrocket.app.R;
@@ -28,6 +32,14 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        EditTextPreference autoDeletePref = findPreference("autoDeleteSightings");
+        autoDeletePref.setOnBindEditTextListener(editText -> {
+            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+            editText.setHint(R.string.settings_hint_auto_delete);
+            editText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(2) });
+        });
+
         this.listener.onCreated();
     }
 

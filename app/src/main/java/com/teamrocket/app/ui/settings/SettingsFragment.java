@@ -44,9 +44,9 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         listener = (sharedPreferences, key) -> {
-            if (key.equals("autoDelete")) {
-                String value = sharedPreferences.getString(key, "Never");
-                if (value.equals("Never")) {
+            if (key.equals("autoDeleteSightings")) {
+                String value = sharedPreferences.getString(key, "");
+                if (value.isEmpty() || value.equals("0")) {
                     cancelWorkRequest();
                     return;
                 }
@@ -119,7 +119,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void enqueueWorkRequest() {
-        WorkRequest request = new PeriodicWorkRequest.Builder(SightingDeleteTask.class, 12, TimeUnit.HOURS)
+        WorkRequest request = new PeriodicWorkRequest.Builder(SightingDeleteTask.class, 15, TimeUnit.MINUTES)
                 .addTag("SightingDeleteTask")
                 .build();
 
