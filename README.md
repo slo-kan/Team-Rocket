@@ -40,7 +40,7 @@ Currently, all the essential features have been implemented.
 
 More implemented features of the app are listed in the [User Stories](../wikis/User-Stories) wiki page.
 
-### [Download APK file](https://code.ovgu.de/steup/rocket/-/raw/dev/app/release/app-release-vM3.apk)
+### [Download APK file](https://code.ovgu.de/steup/rocket/-/raw/dev/app/release/app-release-beta-prototype.apk)
 
 ## Project structure
 
