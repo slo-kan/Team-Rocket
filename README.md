@@ -25,6 +25,19 @@ Currently, all the essential features have been implemented.
 ### Necessary
 - [x] Link to more information in the app itself.
 
+## Beta Prototype
+
+### Essential
+
+- [x] Export sighting data to external storage
+- [x] Add a settings screen and let the user disable location when adding birds
+- [x] Delete sightings older then certain days or months
+
+### Additional
+
+- [ ] Allow the user to record the sounds of birds
+- [x] Share bird sighting to social media
+
 More implemented features of the app are listed in the [User Stories](../wikis/User-Stories) wiki page.
 
 ### [Download APK file](https://code.ovgu.de/steup/rocket/-/raw/dev/app/release/app-release-vM3.apk)
