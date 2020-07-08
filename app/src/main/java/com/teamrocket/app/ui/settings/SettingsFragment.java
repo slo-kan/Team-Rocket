@@ -64,7 +64,8 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        preferenceFragment = new PreferenceFragment(this::onPreferenceFragmentInitialised);
+        preferenceFragment = new PreferenceFragment();
+        preferenceFragment.listener = this::onPreferenceFragmentInitialised;
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.settingsFragmentContainer, preferenceFragment)
                 .commit();

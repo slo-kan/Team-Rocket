@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,10 +17,10 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
     //Initialisation of this fragment might take some time and until then findPreference()
     //cannot be called because it will return null.
     //This listener will notify SettingsFragment when initialisation is done.
-    private OnCreatedListener listener;
+    public OnCreatedListener listener;
 
-    public PreferenceFragment(OnCreatedListener listener) {
-        this.listener = listener;
+
+    public PreferenceFragment() {
     }
 
     @Override
@@ -37,7 +36,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         autoDeletePref.setOnBindEditTextListener(editText -> {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER);
             editText.setHint(R.string.settings_hint_auto_delete);
-            editText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(2) });
+            editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2)});
         });
 
         this.listener.onCreated();
