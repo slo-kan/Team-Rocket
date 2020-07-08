@@ -313,7 +313,14 @@ public class MapFragment extends Fragment {
         if (banner.getVisibility() == View.VISIBLE) {
             padding += banner.getHeight();
         }
-        map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+
+        // For some devices, the padding is becoming too large and causing a crash.
+        try {
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+        } catch (Exception e) {
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding - banner.getHeight()));
+        }
+
         iconRecenter.setVisibility(View.GONE);
     }
 
