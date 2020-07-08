@@ -592,11 +592,10 @@ public class AddSightingActivity extends AppCompatActivity {
         String language = PreferenceManager.getDefaultSharedPreferences(this).getString("lang", "");
         Locale locale = language.isEmpty() ? Locale.getDefault() : new Locale(language);
 
-        Resources res = getBaseContext().getResources();
+        Resources res = getResources();
         Configuration config = new Configuration(res.getConfiguration());
         Locale.setDefault(locale);
         config.setLocale(locale);
-
         res.updateConfiguration(config, res.getDisplayMetrics());
     }
 

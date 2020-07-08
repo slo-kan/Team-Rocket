@@ -151,14 +151,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void setLanguage() {
         String language = PreferenceManager.getDefaultSharedPreferences(this).getString("lang", "");
-        Locale locale = language.isEmpty() ? Locale.getDefault() : new Locale(language);
+        Locale locale = language.isEmpty() ? Resources.getSystem().getConfiguration().getLocales().get(0)
+                : new Locale(language);
 
-        Resources res = getBaseContext().getResources();
+        Resources res = getResources();
         Configuration config = new Configuration(res.getConfiguration());
         Locale.setDefault(locale);
         config.setLocale(locale);
-
         res.updateConfiguration(config, res.getDisplayMetrics());
+
+        Resources appRes = getApplicationContext().getResources();
+        Configuration appConfig = new Configuration(appRes.getConfiguration());
+        Locale.setDefault(locale);
+        appConfig.setLocale(locale);
+        appRes.updateConfiguration(appConfig, appRes.getDisplayMetrics());
     }
 
     public void restart() {
