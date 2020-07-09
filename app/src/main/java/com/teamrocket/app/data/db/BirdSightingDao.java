@@ -12,6 +12,12 @@ import com.teamrocket.app.model.BirdSighting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Flowable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 @Dao
 public abstract class BirdSightingDao {
@@ -47,6 +53,13 @@ public abstract class BirdSightingDao {
 
     @RawQuery
     public abstract List<BirdSighting> filter(SupportSQLiteQuery query);
+
+    public Flowable<List<BirdSighting>> getAllAsync() {
+        return Flowable.just(1)
+                .map(x -> getAll())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
     public List<BirdSighting> findSimilar(Bird bird) {
         return _findSimilar(bird.getName(), bird.getFamily());

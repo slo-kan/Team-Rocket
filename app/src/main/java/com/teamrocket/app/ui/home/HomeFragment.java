@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 import static com.teamrocket.app.data.db.BirdSightingDao.Listener.ADDED;
 import static com.teamrocket.app.data.db.BirdSightingDao.Listener.DELETED;
 
@@ -73,9 +76,13 @@ public class HomeFragment extends Fragment {
 
     private HomeAdapter adapter;
 
+    private ProgressBar progressBar;
+
     private View emptyView;
     private TextView emptyText;
     private View filterView;
+
+    private CompositeDisposable compositeDisposable;
 
     @Nullable
     @Override
@@ -91,6 +98,8 @@ public class HomeFragment extends Fragment {
         };
         dao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
         dao.addListener(listener);
+
+        compositeDisposable = new CompositeDisposable();
 
         categoryListener = category -> {
             Chip chip = (Chip) View.inflate(requireContext(), R.layout.home_dialog_filter_chip, null);
@@ -156,6 +165,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        progressBar = view.findViewById(R.id.progressHome);
+
         emptyView = view.findViewById(R.id.viewNoSightings);
         emptyText = emptyView.findViewById(R.id.textEmpty);
 
@@ -185,9 +196,17 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        List<BirdSighting> sightings = dao.getAll();
-        adapter.update(sightings);
-        if (sightings.isEmpty()) emptyView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        compositeDisposable.add(
+                dao.getAllAsync()
+                        .subscribe(sightings -> {
+                            progressBar.setVisibility(View.GONE);
+                            adapter.update(sightings);
+                            if (sightings.isEmpty()) emptyView.setVisibility(View.VISIBLE);
+                        }, throwable -> {
+                            //ignored
+                        })
+        );
     }
 
     @Override
@@ -208,6 +227,7 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         dao.removeListener(listener);
         categoryDao.removeListener(categoryListener);
+        compositeDisposable.clear();
         stopLocationUpdates();
     }
 
