@@ -39,7 +39,9 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(2)});
         });
 
-        this.listener.onCreated();
+        if (this.listener != null) {
+            this.listener.onCreated();
+        }
     }
 
     public interface OnCreatedListener {

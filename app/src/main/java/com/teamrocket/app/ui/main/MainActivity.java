@@ -41,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof HomeFragment || fragment instanceof MapFragment || fragment instanceof SettingsFragment)
+                getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
+
         homeFragment = new HomeFragment();
         mapFragment = new MapFragment();
         settingsFragment = new SettingsFragment();
@@ -56,7 +61,23 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        showFragment(homeFragment);
+        Fragment first;
+        if (savedInstanceState != null && savedInstanceState.containsKey("currentFragmentName")) {
+            String currentFragmentName = savedInstanceState.getString("currentFragmentName");
+            first = currentFragmentName.equals(SettingsFragment.class.getName()) ? settingsFragment
+                    : currentFragmentName.equals(MapFragment.class.getName()) ? mapFragment
+                    : homeFragment;
+        } else {
+            first = homeFragment;
+        }
+
+        showFragment(first);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (currentFragment != null) outState.putString("currentFragmentName", currentFragment.getClass().getName());
     }
 
     @Override
