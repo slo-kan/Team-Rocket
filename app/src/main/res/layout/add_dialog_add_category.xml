@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/add_sighting_title_category_name"
+        android:inputType="textCapWords"
         android:maxLines="1"
         android:padding="12dp"
         android:singleLine="true" />
