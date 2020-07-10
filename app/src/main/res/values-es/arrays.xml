@@ -8,4 +8,12 @@
         <item>Gorriones</item>
         <item>Pájaros carpinteros</item>
     </string-array>
+
+    <string-array name="auto_delete_times">
+        <item>Nunca</item>
+        <item>Después de 1 mes</item>
+        <item>Después de 3 mes</item>
+        <item>Después de 6 mes</item>
+    </string-array>
+
 </resources>

@@ -65,4 +65,7 @@
     <string name="settings_title_export_data">Exportar datos de avistamiento de aves</string>
     <string name="settings_title_other">Otra</string>
     <string name="settings_msg_export_successful">Datos exportados exitosamente</string>
+    <string name="settings_title_add_locations">Deshabilitar ubicación para futuros avistamientos</string>
+    <string name="settings_msg_auto_delete">Eliminar los avistamientos antiguos automáticamente después de un cierto período de tiempo</string>
+    <string name="settings_hint_auto_delete">(meses)</string>
 </resources>

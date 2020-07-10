@@ -8,4 +8,12 @@
         <item>गौरैया</item>
         <item>कठफोड़वा</item>
     </string-array>
+
+    <string-array name="auto_delete_times">
+        <item>कभी नहीँ</item>
+        <item>1 महीने के बाद</item>
+        <item>3 महीने के बाद</item>
+        <item>6 महीने के बाद</item>
+    </string-array>
+
 </resources>

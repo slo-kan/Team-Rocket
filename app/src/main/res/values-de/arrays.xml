@@ -8,4 +8,12 @@
         <item>Spatzen</item>
         <item>Spechte</item>
     </string-array>
+
+    <string-array name="auto_delete_times">
+        <item>noch nie</item>
+        <item>Nach 1 monat</item>
+        <item>Nach 3 monat</item>
+        <item>Nach 6 monat</item>
+    </string-array>
+
 </resources>

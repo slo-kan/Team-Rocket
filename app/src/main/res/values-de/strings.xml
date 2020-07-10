@@ -63,4 +63,7 @@
     <string name="settings_title_export_data">Exportieren Sie Vogelbeobachtungsdaten</string>
     <string name="settings_title_other">Andere</string>
     <string name="settings_msg_export_successful">Daten erfolgreich exportiert</string>
+    <string name="settings_title_add_locations">Deaktivieren Sie den Standort für zukünftige Sichtungen</string>
+    <string name="settings_msg_auto_delete">Entfernen Sie alte Sichtungen nach einer bestimmten Zeit automatisch</string>
+    <string name="settings_hint_auto_delete">(Monate)</string>
 </resources>

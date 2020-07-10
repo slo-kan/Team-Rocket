@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavBar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setLanguage();
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         if (currentFragment != null) outState.putString("currentFragmentName", currentFragment.getClass().getName());
     }
+
 
     @Override
     public void onBackPressed() {

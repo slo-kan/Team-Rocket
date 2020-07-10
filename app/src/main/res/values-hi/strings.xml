@@ -64,5 +64,8 @@
     <string name="settings_title_export_data">निर्यात पक्षी दृश्य डेटा</string>
     <string name="settings_title_other">अन्य</string>
     <string name="settings_msg_export_successful">डेटा सफलतापूर्वक निर्यात किया गया</string>
+    <string name="settings_title_add_locations">भविष्य की दृष्टि के लिए स्थान अक्षम करें</string>
+    <string name="settings_msg_auto_delete">निश्चित समय के बाद स्वचालित रूप से पुरानी दृष्टि हटाएं</string>
+    <string name="settings_hint_auto_delete">(महीने)</string>
 
 </resources>
