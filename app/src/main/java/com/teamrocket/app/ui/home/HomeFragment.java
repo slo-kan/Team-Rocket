@@ -55,6 +55,7 @@ import java.util.stream.Collectors;
 
 import io.reactivex.disposables.CompositeDisposable;
 
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static com.teamrocket.app.data.db.BirdSightingDao.Listener.ADDED;
 import static com.teamrocket.app.data.db.BirdSightingDao.Listener.DELETED;
 
@@ -185,8 +186,10 @@ public class HomeFragment extends Fragment {
 
         });
 
+        boolean isPortrait = getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT;
+
         RecyclerView recyclerView = view.findViewById(R.id.recyclerHome);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), isPortrait ? 2 : 4));
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
