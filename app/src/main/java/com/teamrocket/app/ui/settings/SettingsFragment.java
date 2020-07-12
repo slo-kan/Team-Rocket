@@ -40,6 +40,9 @@ public class SettingsFragment extends Fragment {
     private SharedPreferences.OnSharedPreferenceChangeListener listener;
     private PreferenceFragment preferenceFragment;
 
+    BirdSightingDao sightingDao;
+    CategoryDao categoryDao;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,6 +53,9 @@ public class SettingsFragment extends Fragment {
             }
         };
         preferences.registerOnSharedPreferenceChangeListener(listener);
+
+        sightingDao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
+        categoryDao = ((BTApplication) getActivity().getApplication()).getCategoryDao();
 
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
@@ -82,6 +88,11 @@ public class SettingsFragment extends Fragment {
 
     private void onPreferenceFragmentInitialised() {
         preferenceFragment.findPreference("export").setOnPreferenceClickListener(preference -> {
+            if (sightingDao.count() == 0 && categoryDao.getNumNonDefault() == 0) {
+                Toast.makeText(requireContext(), R.string.settings_msg_export_empty, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
             String fileName = "export_" + System.currentTimeMillis();
 
             Intent createIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
@@ -109,8 +120,6 @@ public class SettingsFragment extends Fragment {
     }
 
     private void exportData(Uri uri) {
-        BirdSightingDao sightingDao = ((BTApplication) getActivity().getApplication()).getBirdSightingDao();
-        CategoryDao categoryDao = ((BTApplication) getActivity().getApplication()).getCategoryDao();
         Gson gson = new Gson();
 
         StringBuilder dataBuilder = new StringBuilder();
